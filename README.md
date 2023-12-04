@@ -21,3 +21,11 @@
 - Federated-IdentityProvider 使用的角色列表：
   - openldap
   - keycloak
+- ObservabilityPlatform 使用的角色列表：
+  - alerting
+  - clickhouse
+  - node-exporter
+  - observability-agent
+  - observability-server
+  - prometheus-transfer
+  - promtail-agent
