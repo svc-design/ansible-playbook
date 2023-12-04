@@ -18,3 +18,6 @@
   - gitlab	        代码仓库角色，用于存储和管理代码。
   - harbor	        容器镜像仓库角色，用于存储和管理容器镜像。
   - mysql	        MySQL 数据库角色，用于提供 MySQL 数据库服务。
+- Federated-IdentityProvider 使用的角色列表：
+  - openldap
+  - keycloak
