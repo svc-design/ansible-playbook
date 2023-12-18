@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: data-gateway.onwalk.net
+  - host: data-gateway.svc.plus
     http:
       paths:
       - backend:
@@ -20,5 +20,5 @@ spec:
         pathType: Prefix
   tls:
   - hosts:
-    - data-gateway.onwalk.net
+    - data-gateway.svc.plus
     secretName: obs-tls
