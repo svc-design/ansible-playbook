@@ -22,7 +22,7 @@
 #  when: inventory_hostname in groups[group]
 
 - name: get clickhouse node ip
-  shell: "kubectl  get pods -n monitoring -o wide | grep  monitoring | awk '{print $6}'"
+  shell: " kubectl  get pods -n monitoring -o wide | grep -E '^clickhouse-' | awk '{print $6}' "
   register: ck_node_ip_raw
   when: inventory_hostname in groups[group][0]
 
