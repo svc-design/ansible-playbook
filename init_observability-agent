@@ -9,6 +9,6 @@
       vars:
         group: master
         namespace: monitoring
-        observableserver: data-gateway.onwalk.net 
+        observableserver: data-gateway.svc.plus
         deepflowserverip: 10.146.0.8
         deepflowk8sclusterid: d-kqjofXyZbg 

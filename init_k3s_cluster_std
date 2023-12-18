@@ -22,7 +22,7 @@
       vars:
         group: master
         ingress: nginx
-        domain: onwalk.net
+        domain: svc.plus
         namespace: ingress
         external_dns: enable
         auto_issuance: true

@@ -10,10 +10,10 @@
         group: master
         namespace: monitoring
         db_namespace: database
-        domain: onwalk.net
+        domain: svc.plus
         auto_issuance: false
         update_secret: true
         tls:
           - secret_name: obs-tls
-            keyfile: /etc/ssl/onwalk.net.key
-            certfile: /etc/ssl/onwalk.net.pem
+            keyfile: /etc/ssl/svc.plus.key
+            certfile: /etc/ssl/svc.plus.pem
