@@ -22,9 +22,14 @@
 #  when: inventory_hostname in groups[group]
 
 - name: get clickhouse node ip
-  shell: "kubectl  get pods -n monitoring -o wide | grep  clickhouse  | awk '{print $6}'"
+  shell: "kubectl  get pods -n monitoring -o wide | grep  monitoring | awk '{print $6}'"
   register: ck_node_ip_raw
   when: inventory_hostname in groups[group][0]
+
+- name: Check if ck_node_ip_raw is not empty
+  fail:
+    msg: "ck_node_ip_raw is empty, terminating the playbook."
+  when: ck_node_ip_raw.stdout_lines | length == 0
 
 - name: set fact join command for ck_node_ip
   set_fact:

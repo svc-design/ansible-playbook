@@ -1,3 +1,7 @@
+- name: Post Setup MySQL Server
+  script: files/mysql-db-init-setup.sh {{ db_namespace }}
+  when: inventory_hostname in groups[group]
+
 - name: get mysql db password
   shell: 'kubectl get secret --namespace database mysql -o jsonpath="{.data.mysql-root-password}" | base64 -d'
   register: mysql_db_password_raw

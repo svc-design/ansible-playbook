@@ -32,32 +32,32 @@ data:
             <raft_configuration>
                 <server>
                     <id>0</id>
-                    <hostname>clickhouse-0.clickhouse-service.clickhouse</hostname>
+                    <hostname>clickhouse-0.clickhouse-service.monitoring</hostname>
                     <port>9444</port>
                 </server>
                 <server>
                     <id>1</id>
-                    <hostname>clickhouse-1.clickhouse-service.clickhouse</hostname>
+                    <hostname>clickhouse-1.clickhouse-service.monitoring</hostname>
                     <port>9444</port>
                 </server>
                 <server>
                     <id>2</id>
-                    <hostname>clickhouse-2.clickhouse-service.clickhouse</hostname>
+                    <hostname>clickhouse-2.clickhouse-service.monitoring</hostname>
                     <port>9444</port>
                 </server>
             </raft_configuration>
         </keeper_server>
         <zookeeper>
             <node>
-                <host>clickhouse-0.clickhouse-service.clickhouse</host>
+                <host>clickhouse-0.clickhouse-service.monitoring</host>
                 <port>2181</port>
             </node>
             <node>
-                <host>clickhouse-1.clickhouse-service.clickhouse</host>
+                <host>clickhouse-1.clickhouse-service.monitoring</host>
                 <port>2181</port>
             </node>
             <node>
-                <host>clickhouse-2.clickhouse-service.clickhouse</host>
+                <host>clickhouse-2.clickhouse-service.monitoring</host>
                 <port>2181</port>
             </node>
         </zookeeper>
@@ -70,13 +70,13 @@ data:
             <testcluster>
                 <shard>
                     <replica>
-                        <host>clickhouse-0.clickhouse-service.clickhouse</host>
+                        <host>clickhouse-0.clickhouse-service.monitoring</host>
                         <port>9000</port>
                     </replica>
                 </shard>
                 <shard>
                     <replica>
-                        <host>clickhouse-1.clickhouse-service.clickhouse</host>
+                        <host>clickhouse-1.clickhouse-service.monitoring</host>
                         <port>9000</port>
                     </replica>
                 </shard>
