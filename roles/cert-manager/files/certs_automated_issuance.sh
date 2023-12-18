@@ -7,8 +7,8 @@ export domain=$1
 export Ali_Key=$2
 export Ali_Secret=$3
 
-rm -rvf ${Domain}.* -f
-rm -rvf /etc/ssl/${Domain}.* -f
+rm -fv ${domain}.key ${domain}.pem -f
+rm -fv /etc/ssl/${domain}.* -f
 
 # Try to issue a certificate from ZeroSSL. If it fails, try Let's Encrypt.
   
