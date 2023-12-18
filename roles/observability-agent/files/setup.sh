@@ -5,8 +5,6 @@ export deepflowserverip=$2
 export deepflowk8sclusterid=$3
 
 cat > values.yaml << EOF
-kube-state-metrics:
-  enabled: true
 deepflow-agent:
   enabled: true
   deepflowServerNodeIPS:
@@ -29,19 +27,7 @@ promtail:
   enabled: true
   config:
     clients:
-      - url: http://${observableserver}/loki/api/v1/push
-fluent-bit:
-  enabled: false
-  logLevel: debug
-  config:
-    outputs: |
-      [OUTPUT]
-          Name        loki
-          Match       kube.*
-          Host        $observableserver
-          port        $port
-          tls         on
-          tls.verify  on
+      - url: https://${observableserver}/loki/api/v1/push
 EOF
 
 node_name=`kubectl get nodes | awk 'NR>1 {print $1}'`
