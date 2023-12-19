@@ -10,6 +10,9 @@ sources:
   - ingress
 domainFilters:
   - onwalk.net
+  - svc.plus
+  - svc-sit.ink
+  - svc-dev.ink
 policy: upsert-only
 provider: alibabacloud
 alibabacloud:
