@@ -1,6 +1,6 @@
 #!/bin/bash
 set -x
-export observableserver=$1
+export domain=$1
 export deepflowserverip=$2
 export deepflowk8sclusterid=$3
 
@@ -18,7 +18,7 @@ prometheus:
     - web.enable-lifecycle
     remoteWrite:
     - name: remote_prometheus
-      url: 'https://${observableserver}/api/v1/write'
+      url: 'https://prometheus.${domain}/api/v1/write'
   alertmanager:
     enabled: false
   rometheus-pushgateway:
@@ -27,7 +27,7 @@ promtail:
   enabled: true
   config:
     clients:
-      - url: https://${observableserver}/loki/api/v1/push
+      - url: https://data-gateway.${domain}/loki/api/v1/push
 EOF
 
 node_name=`kubectl get nodes | awk 'NR>1 {print $1}'`
