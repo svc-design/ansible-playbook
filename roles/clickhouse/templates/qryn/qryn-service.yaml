@@ -10,7 +10,6 @@ spec:
   ports:
     - name: "3100"
       port: 3100
-      nodePort: 3100
       targetPort: 3100
   selector:
     io.metrico.service: qryn
