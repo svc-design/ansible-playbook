@@ -13,8 +13,8 @@ check_not_empty "$1" "Git repository URL" && git_repo=$1
 check_not_empty "$2" "Cluster name" && cluster_name=$2
 
 helm repo add fluxcd https://fluxcd-community.github.io/helm-charts
-helm repo up
-helm upgrade --install fluxcd/fluxcd2 --version 2.12.1 -n fluxcd-system --create-namespace
+helm repo update
+helm upgrade --install fluxcd fluxcd/flux2 --version 2.12.1 -n fluxcd-system --create-namespace
 
 cat > cluster-config.yaml << EOF
 apiVersion: source.toolkit.fluxcd.io/v1beta2
