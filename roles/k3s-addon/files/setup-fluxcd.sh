@@ -14,14 +14,15 @@ check_not_empty "$2" "Cluster name" && cluster_name=$2
 
 helm repo add fluxcd https://fluxcd-community.github.io/helm-charts
 helm repo update
-helm upgrade --install fluxcd fluxcd/flux2 --version 2.12.1 -n fluxcd-system --create-namespace
+kubectl create namespace gitops-system || true
+helm upgrade --install fluxcd fluxcd/flux2 --version 2.12.1 -n gitops-system
 
 cat > cluster-config.yaml << EOF
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: GitRepository
 metadata:
   name: stable
-  namespace: flux-system
+  namespace: gitops-system
 spec:
   interval: 1m0s
   ref:
@@ -32,7 +33,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
   name: cluster
-  namespace: flux-system
+  namespace: gitops-system
 spec:
   interval: 1m0s
   sourceRef:
