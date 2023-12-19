@@ -14,6 +14,3 @@ spec:
       targetPort: 3100
   selector:
     io.metrico.service: qryn
-  type: NodePort
-status:
-  loadBalancer: {}
