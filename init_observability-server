@@ -17,3 +17,15 @@
           - secret_name: obs-tls
             keyfile: /etc/ssl/svc.plus.key
             certfile: /etc/ssl/svc.plus.pem
+    - include_role:
+        name: flagger-loadtester 
+      vars:
+        group: master
+        domain: svc.plus
+        update_secret: true
+        auto_issuance: false
+        namespace: loadtester
+        tls:
+          - secret_name: obs-tls
+            keyfile: /etc/ssl/svc.plus.key
+            certfile: /etc/ssl/svc.plus.pem
