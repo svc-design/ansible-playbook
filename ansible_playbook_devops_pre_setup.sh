@@ -9,7 +9,7 @@ check_empty() {
 }
 
 # List of variables to check
-variables=("DNS_AK" "DNS_SK" "SSH_USER" "SSH_HOST_IP" "SSH_HOST_DOMAIN" "SSH_PRIVATE_KEY")
+variables=("DNS_AK" "DNS_SK" "OSS_AK" "OSS_SK" "ROOT_PASSWORD" "SMTP_PASSWORD" "GITLAB_OIDC_CLIENT_TOKEN" "HARBOR_OIDC_CLIENT_TOKEN" "SSH_USER" "SSH_HOST_IP" "SSH_HOST_DOMAIN" "SSH_PRIVATE_KEY")
 
 # Loop through variables and check if each one is empty
 for var in "${variables[@]}"; do
@@ -39,4 +39,10 @@ ansible_host_key_checking=False
 ingress_ip=$SSH_HOST_IP
 dns_ak=$DNS_AK
 dns_sk=$DNS_SK
+oss_ak=$OSS_AK
+oss_sk=$OSS_SK
+admin_password=$ROOT_PASSWORD
+smtp_password=$SMTP_PASSWORD
+gitlab_oidc_client_token=$GITLAB_OIDC_CLIENT_TOKEN
+harbor_oidc_client_token=$HARBOR_OIDC_CLIENT_TOKEN
 EOF
