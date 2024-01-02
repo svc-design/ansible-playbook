@@ -15,7 +15,7 @@ cat > vaules.yaml << EOF
 server:
   ingress:
     enabled: true
-    ingressClassName: "apisix"
+    ingressClassName: "nginx"
     hosts:
       - host: vault.$DOMAIN
         paths:
