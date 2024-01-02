@@ -1,0 +1,17 @@
+- name: Setup Vault 
+  hosts: all
+  user: root
+  become: yes
+  gather_facts: yes
+  tasks:
+    - include_role:
+        name: vault
+      vars:
+        group: master
+        namespace: vault
+        update_secret: true
+        auto_issuance: false
+        tls:
+          - secret_name: vault-tls
+            keyfile: /etc/ssl/onwalk.net.key
+            certfile: /etc/ssl/onwalk.net.pem
