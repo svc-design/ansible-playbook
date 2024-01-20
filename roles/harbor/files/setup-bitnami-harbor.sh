@@ -14,12 +14,12 @@ exposureType: ingress
 ingress:
   core:
     ingressClassName: "nginx"
-    hostname: artifact.${domain}
+    hostname: harbor.${domain}
     extraTls:
     - hosts:
-        - artifact.${domain}
+        - harbor.${domain}
       secretName: "$secret_name"
-externalURL: https://artifact.${domain}
+externalURL: https://harbor.${domain}
 
 postgresql:
   enabled: false
@@ -58,7 +58,7 @@ persistence:
       accesskeyid: $ak
       accesskeysecret: $sk
       region: "oss-cn-wulanchabu"
-      bucket: "oss-artifacts"
+      bucket: "harbor-onwalk-net"
       endpoint: "oss-cn-wulanchabu.aliyuncs.com"
     s3:
       region: ap-east-1
