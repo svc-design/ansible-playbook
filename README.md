@@ -29,3 +29,6 @@
   - observability-server
   - prometheus-transfer
   - promtail-agent
+
+https://github.com/signalfx/splunk-otel-collector
+https://github.com/signalfx/splunk-otel-collector-chart
