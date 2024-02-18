@@ -49,4 +49,4 @@ kubectl create namespace monitoring || echo true
 kubectl label nodes $node prometheus=true --overwrite || echo true
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-helm upgrade --install prometheus-agent prometheus-community/kube-prometheus-stack -n monitoring -f prometheus-values.yaml
+helm upgrade --install prometheus-agent prometheus-community/kube-prometheus-stack --version 55.11.0 -n monitoring -f prometheus-values.yaml
