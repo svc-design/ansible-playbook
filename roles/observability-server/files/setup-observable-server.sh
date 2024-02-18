@@ -12,6 +12,14 @@ node_name=`kubectl get nodes | awk '{print $1}' | tail -n 1`
 kubectl label nodes $node_name app=prometheus --overwrite
 
 cat > values.yaml << EOF
+influxdb:
+  enabled: true
+  ingress:
+    tls: true
+    enabled: true
+    secretName: ${secret}
+    hostname: influxdb.${domain}
+    className: nginx
 deepflow:
   enabled: true
   clickhouse:
