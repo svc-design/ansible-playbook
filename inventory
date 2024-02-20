@@ -1,18 +1,11 @@
 [master]
-splunk-connect.onwalk.net               ansible_host=8.218.254.180
+monitor.onwalk.net               ansible_host=34.146.68.227
+prod.onwalk.net                  ansible_host=35.187.216.157
+sit.onwalk.net                   ansible_host=34.85.106.17
+uat.onwalk.net                   ansible_host=35.187.197.150
 
 [all:vars]
 ansible_port=22
-ansible_ssh_user=root
+ansible_ssh_user=ubuntu
 ansible_ssh_private_key_file=~/.ssh/id_rsa
 ansible_host_key_checking=False
-domain=onwalk.net
-ingress_ip=8.218.254.180
-dns_ak=
-dns_sk=
-oss_ak=
-oss_sk=
-admin_password=
-smtp_password=
-gitlab_oidc_client_token=
-harbor_oidc_client_token=

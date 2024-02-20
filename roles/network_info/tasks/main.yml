@@ -1,0 +1,20 @@
+- name: Get specific network interfaces (ens*, cni*)
+  ansible.builtin.shell: |
+    ip -br link | awk '/^(ens|cni)/ {print $1}'
+  register: interfaces
+
+- name: Display network information for each filtered interface
+  ansible.builtin.shell: |
+    echo -n "{{ item }} ";
+    ip link show "{{ item }}" | grep -q "state UP" && echo -n "UP" || echo -n "DOWN";
+    ip_addr=$(ip -br addr show "{{ item }}" | awk '{print $3}');
+    echo -n "$ip_addr ";
+    ip route | grep default | grep "{{ item }}" | awk '{print $3}'
+  loop: "{{ interfaces.stdout_lines }}"
+  register: interface_details
+
+- name: Debug each filtered interface details
+  ansible.builtin.debug:
+    msg: "{{ item.stdout }}"
+  loop: "{{ interface_details.results }}"
+

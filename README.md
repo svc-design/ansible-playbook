@@ -29,3 +29,6 @@
   - observability-server
   - prometheus-transfer
   - promtail-agent
+
+
+ansible-playbook -i your_inventory_file gather_network_info.yml -e "target_group=your_group_name"
