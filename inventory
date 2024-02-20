@@ -1,5 +1,5 @@
 [master]
-monitor.onwalk.net               ansible_host=34.146.68.227
+monitor.onwalk.net               ansible_host=104.198.86.52
 prod.onwalk.net                  ansible_host=35.187.216.157
 sit.onwalk.net                   ansible_host=34.85.106.17
 uat.onwalk.net                   ansible_host=35.187.197.150

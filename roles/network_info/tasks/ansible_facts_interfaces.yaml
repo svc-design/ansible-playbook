@@ -1,17 +1,14 @@
----
-- name: Gather specific network interface information and display details
+- name: Gather network interface information and display details
   hosts: all
   gather_facts: yes
   tasks:
-    - name: Display details for interfaces starting with ens or cni
+    - name: Display interface details
       ansible.builtin.debug:
         msg: |
-          Interface: {{ item.key }}
-          Status: {{ 'UP' if item.value.active else 'DOWN' }}
-          IP Address: {{ item.value.ipv4.address if item.value.ipv4 is defined else 'N/A' }}
-          Netmask: {{ item.value.ipv4.netmask if item.value.ipv4 is defined else 'N/A' }}
-          Route: {{ item.value.ipv4.network if item.value.ipv4 is defined else 'N/A' }}
-      loop: "{{ ansible_facts.interfaces | dict2items }}"
-      when: item.key | regex_search('^(ens|cni)')
-      loop_control:
-        label: "{{ item.key }}"
+          Interface: "{{ item }}"
+          Status: "{{ 'UP' if hostvars[inventory_hostname]['ansible_' + item].active else 'DOWN' }}"
+          IP Address: "{{ hostvars[inventory_hostname]['ansible_' + item].ipv4.address if hostvars[inventory_hostname]['ansible_' + item].ipv4 is defined else 'N/A' }}"
+          Netmask: "{{ hostvars[inventory_hostname]['ansible_' + item].ipv4.netmask if hostvars[inventory_hostname]['ansible_' + item].ipv4 is defined else 'N/A' }}"
+          Route: "To be manually determined or fetched with additional tasks"
+      loop: "{{ ansible_facts.interfaces }}"
+      when: "'ens' in item or 'cni' in item"
