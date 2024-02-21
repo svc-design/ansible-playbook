@@ -3,7 +3,7 @@
   hosts: "{{ target_group }}"
   user: ubuntu
   become: yes
-  gather_facts: no
+  gather_facts: yes
   tasks:
     - include_role:
         name: network_info

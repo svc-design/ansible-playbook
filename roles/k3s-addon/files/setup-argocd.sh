@@ -12,7 +12,7 @@ check_not_empty() {
 check_not_empty "$1" "Git repository URL" && git_repo=$1
 check_not_empty "$2" "Cluster name" && cluster_name=$2
 
-helm repo add fluxcd https://fluxcd-community.github.io/helm-charts
+helm repo add argo https://argoproj.github.io/argo-helm
 helm repo update
 kubectl create namespace gitops-system || true
 helm upgrade --install fluxcd fluxcd/flux2 --version 2.12.1 -n gitops-system

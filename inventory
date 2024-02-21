@@ -1,8 +1,8 @@
 [master]
-monitor.onwalk.net               ansible_host=104.198.86.52
-prod.onwalk.net                  ansible_host=35.187.216.157
-sit.onwalk.net                   ansible_host=34.85.106.17
-uat.onwalk.net                   ansible_host=35.187.197.150
+monitor.onwalk.net               ansible_host=104.198.92.3
+prod.onwalk.net                  ansible_host=35.194.100.138
+sit.onwalk.net                   ansible_host=35.187.197.150
+uat.onwalk.net                   ansible_host=35.187.192.55
 
 [all:vars]
 ansible_port=22

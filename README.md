@@ -30,5 +30,5 @@
   - prometheus-transfer
   - promtail-agent
 
-
-ansible-playbook -i your_inventory_file gather_network_info.yml -e "target_group=your_group_name"
+ansible-playbook  -i inventory gather_network_info.yml -e target_group=master
+ansible -i inventory all -m script -a 'roles/network_info/tasks/files/display_network_info.sh'
