@@ -32,3 +32,7 @@
 
 ansible-playbook  -i inventory gather_network_info.yml -e target_group=master
 ansible -i inventory all -m script -a 'roles/network_info/tasks/files/display_network_info.sh'
+
+# all_in_one scripts
+
+- curl -sfL https://mirrors.onwalk.net/public/k3s_setup.sh | sh
