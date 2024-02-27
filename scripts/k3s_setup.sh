@@ -20,7 +20,7 @@ function setup_k3s() {
     echo "当前主机在大陆网络上"
     curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_VERSION=$version  INSTALL_K3S_MIRROR=cn sh -s - $default
   fi
-  mkdir -pv ~/.kube/ && cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+  mkdir -pv ~/.kube/ && sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
 }
 
 function setup_helm()
