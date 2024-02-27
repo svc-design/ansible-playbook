@@ -35,4 +35,4 @@ ansible -i inventory all -m script -a 'roles/network_info/tasks/files/display_ne
 
 # all_in_one scripts
 
-- curl -sfL https://mirrors.onwalk.net/public/k3s_setup.sh | sh
+- curl -sfL https://mirrors.onwalk.net/public/k3s_setup.sh | bash -
