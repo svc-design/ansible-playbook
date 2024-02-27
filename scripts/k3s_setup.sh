@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 function get_local_ip() {
     local_ip=$(hostname -I | awk '{print $1}')
@@ -10,7 +10,7 @@ function setup_k3s() {
   local disable_cni="--flannel-backend=none --disable-network-policy"
   local default="--disable=traefik,servicelb --data-dir=/opt/rancher/k3s --kube-apiserver-arg service-node-port-range=0-50000"
 
-  mkdir -pv /opt/rancher/k3s
+  sudo mkdir -pv /opt/rancher/k3s
 
   ping -c 1 google.com > /dev/null 2>&1
   if [ $? -eq 0 ]; then
@@ -37,7 +37,7 @@ function setup_helm()
           loongarch64) ARCH=loongarch64; ;;
           *) echo "un-supported arch, exit ..."; exit 1; ;;
     esac
-    rm -rf helm.tar.gz* /usr/local/bin/helm || echo true
+    sudo rm -rf helm.tar.gz* /usr/local/bin/helm || echo true
     sudo wget --no-check-certificate https://mirrors.onwalk.net/tools/linux-${ARCH}/helm.tar.gz && sudo tar -xvpf helm.tar.gz -C /usr/local/bin/
     sudo chmod 755 /usr/local/bin/helm
   fi
@@ -88,10 +88,82 @@ EOF
 }
 
 function setup_k3s_gitops() {
-  helm repo add stable https://charts.onwalk.net
-  helm repo update
-  kubectl create namespace gitops-system || true
-  helm upgrade --install fluxcd stable/flux2 --version 2.12.1 -n gitops-system -f fluxcd-values.yaml
+   cat > fluxcd-values.yaml << EOF
+cli:
+  image: artifact.onwalk.net/public/fluxcd/flux-cli
+  tag: v2.2.0
+  resources:
+    request:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 100Mi
+helmController:
+  create: true
+  image: artifact.onwalk.net/public/fluxcd/helm-controller
+  tag: v0.37.0
+  resources:
+    request:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 100Mi
+imageAutomationController:
+  image: artifact.onwalk.net/public/fluxcd/image-automation-controller
+  tag: v0.37.0
+  resources:
+    request:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 100Mi
+imageReflectionController:
+  image: artifact.onwalk.net/public/fluxcd/image-reflector-controller
+  tag: v0.31.1
+  resources:
+    request:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 100Mi
+kustomizeController:
+  create: true
+  image: artifact.onwalk.net/public/fluxcd/kustomize-controller
+  tag: v1.2.0
+  resources:
+    request:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 100Mi
+notificationController:
+  create: false
+  image: artifact.onwalk.net/public/fluxcd/notification-controller
+  tag: v1.2.2
+  resources:
+    request:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 100Mi
+sourceController:
+  create: true
+  image: artifact.onwalk.net/public/fluxcd/source-controller
+  tag: v1.2.2
+  resources:
+    request:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 100Mi
+EOF
 
   cat > cluster-config.yaml << EOF
 apiVersion: source.toolkit.fluxcd.io/v1beta2
@@ -119,6 +191,10 @@ spec:
   prune: true
 EOF
 
+  helm repo add stable https://charts.onwalk.net
+  helm repo update
+  kubectl create namespace gitops-system || true
+  helm upgrade --install fluxcd stable/flux2 --version 2.12.1 -n gitops-system -f fluxcd-values.yaml
   kubectl apply -f cluster-config.yaml && rm cluster-config.yaml -f
 }
 
