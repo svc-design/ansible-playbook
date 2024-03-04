@@ -1,0 +1,23 @@
+name: Run Ansible Lint in Container 
+
+on:
+  pull_request:
+    paths:
+      - '**/*.yaml'
+      - '**/*.yml'
+
+jobs:
+  ansible-lint:
+    runs-on: ubuntu-latest
+
+    container:
+      image: artifact.onwalk.net/public/base/alpine-ansible-lint:latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run ansible-lint
+        run: |
+          ansible-lint .
+
