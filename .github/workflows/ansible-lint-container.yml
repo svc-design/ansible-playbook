@@ -2,9 +2,13 @@ name: Run Ansible Lint in Container
 
 on:
   pull_request:
+    branches: ["main", "stable", "release/v*"]
     paths:
       - '**/*.yaml'
       - '**/*.yml'
+  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
   ansible-lint:
