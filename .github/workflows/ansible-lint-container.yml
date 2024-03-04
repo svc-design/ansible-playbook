@@ -23,5 +23,6 @@ jobs:
 
       - name: Run ansible-lint
         run: |
+          pwd && ls
           ansible-lint .
 
