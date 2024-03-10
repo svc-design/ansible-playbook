@@ -1,5 +1,9 @@
-- name: Set FluxCD Contoller
-  script: files/setup-fluxcd.sh {{ config_repo }} {{ cluster_name }}
+#- name: Set FluxCD Contoller
+#  script: files/setup-fluxcd.sh {{ config_repo }} {{ cluster_name }}
+#  when: inventory_hostname in groups[group] and ( gitops == 'enable' )
+
+- name: Set ArgoCD Contoller
+  script: files/setup-argocd.sh {{ config_repo }} {{ helmfile_name }}
   when: inventory_hostname in groups[group] and ( gitops == 'enable' )
 
 #- name: Setup Prometheus Operator
