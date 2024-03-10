@@ -10,37 +10,46 @@ check_not_empty() {
 
 # 检查参数是否为空
 check_not_empty "$1" "Git repository URL" && git_repo=$1
-check_not_empty "$2" "Cluster name" && cluster_name=$2
+check_not_empty "$2" "Helmfile name" && helmfile_name=$2
 
+#!/bin/bash
+
+# 添加 Argo CD 的 Helm 仓库
 helm repo add argo https://argoproj.github.io/argo-helm
 helm repo update
-kubectl create namespace gitops-system || true
-helm upgrade --install fluxcd fluxcd/flux2 --version 2.12.1 -n gitops-system
 
-cat > cluster-config.yaml << EOF
-apiVersion: source.toolkit.fluxcd.io/v1beta2
-kind: GitRepository
+# 使用 Helm 部署 Argo CD
+helm install argocd argo/argo-cd -n argocd --create-namespace
+
+# 等待 Argo CD 完全启动
+echo "Waiting for Argo CD to be ready..."
+kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=argocd-server -n argocd --timeout=180s
+
+# 创建 Argo CD Application 配置文件
+cat <<EOF > argocd-application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
-  name: stable
-  namespace: gitops-system
+  name: helmfile-application
+  namespace: argocd
 spec:
-  interval: 1m0s
-  ref:
-    branch: main 
-  url: $git_repo 
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
-kind: Kustomization
-metadata:
-  name: cluster
-  namespace: gitops-system
-spec:
-  interval: 1m0s
-  sourceRef:
-    kind: GitRepository
-    name: stable
-  path: ./clusters/${cluster_name}
-  prune: true
+  project: default
+  source:
+    repoURL: $git_repo
+    path: $helmfile_name
+    targetRevision: HEAD
+    helm:
+      releaseName: helmfile-application
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 EOF
 
-kubectl apply -f cluster-config.yaml && rm cluster-config.yaml -f
+# 应用 Argo CD Application 配置
+kubectl apply -f argocd-application.yaml
+
+echo "Argo CD deployment and configuration complete."
