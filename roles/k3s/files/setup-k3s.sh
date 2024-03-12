@@ -6,6 +6,7 @@ export cni=$2
 export pod_cidr=$3
 export svc_cidr=$4
 export enable_api_access=$5
+export advertise-address=$6
 
 
 function setup_k3s()
@@ -49,7 +50,7 @@ disable_cni="--flannel-backend=none --disable-network-policy"
 default="--disable=traefik,servicelb --data-dir=/opt/rancher/k3s --kube-apiserver-arg service-node-port-range=0-50000"
 
 case $enable_api_access in
-  'true')  api_opts="--kube-apiserver-arg=bind-address=0.0.0.0" ;;
+  'true')  api_opts="--kube-apiserver-arg=bind-address=0.0.0.0 --advertise-address=$advertise-address" ;;
   *) api_opts="" ;;
 esac
 
