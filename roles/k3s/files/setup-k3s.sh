@@ -84,21 +84,29 @@ function set_apiserver_l7_proxy()
 {
   sudo apt update && apt install nginx -y        
 cat > /etc/nginx/sites-available/default << EOF
-server {
-    listen 6443 ssl;
-    ssl_certificate /usr/local/nginx/ssl/apiserver.crt;               # kube-apiserver cert
-    ssl_certificate_key /usr/local/nginx/ssl/apiserver.key;              # kube-apiserver key
-    ssl_trusted_certificate /usr/local/nginx/ssl/ca.crt;                         # ca.pem
-    location / {
-        proxy_ssl_certificate /usr/local/nginx/ssl/admin.crt;                    # kubectl cert
-        proxy_ssl_certificate_key /usr/local/nginx/ssl/admin.key;            # kubectl key
-        proxy_ssl_trusted_certificate /usr/local/nginx/ssl/ca.crt;               # ca.pem
-        proxy_pass https://control_plain_6443/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-Ip $remote_addr;
-        proxy_set_header X-Forwarded-For $remote_addr;
+
+http {
+    upstream api {
+        kubernetes.default.svc.cluster.local:6443;
+    }   
+ 
+    server {
+      listen 6443 ssl;
+      ssl_certificate /usr/local/nginx/ssl/apiserver.crt;               # kube-apiserver cert
+      ssl_certificate_key /usr/local/nginx/ssl/apiserver.key;           # kube-apiserver key
+      ssl_trusted_certificate /usr/local/nginx/ssl/ca.crt;              # ca.pem
+        
+      location / {
+      }
+
+      location /api/ {
+        rewrite ^/api(/.*)$ $1 break;
+        proxy_pass https://api;
+        proxy_ssl_certificate         /etc/nginx/k8s-client-certificate.pem;
+        proxy_ssl_certificate_key     /etc/nginx/k8s-client-key.key;
+        proxy_ssl_session_reuse on;
+      }
     }
-  }
 }
 EOF
   sudo systemctl restart nginx
