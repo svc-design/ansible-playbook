@@ -49,20 +49,32 @@ function set_apiserver_proxy()
 {
   sudo apt update && apt install nginx -y        
 cat > /etc/nginx/sites-available/default << EOF
-server {
-    listen 443 ssl;
-    server_name k3s-cluster.onwalk.net;
 
-    ssl_certificate /etc/ssl/onwalk.net.pem;
-    ssl_certificate_key /etc/ssl/onwalk.net.key;
+load_module /usr/lib64/nginx/modules/ngx_stream_module.so;
 
-    location / {
-        proxy_pass https://127.0.0.1:6443;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-       proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_ssl_verify off;
+worker_processes 4;
+worker_rlimit_nofile 40000;
+
+
+events {
+    worker_connections 8192;
+}
+
+stream {
+    log_format logs '$remote_addr - - [$time_local] $protocol $status $bytes_sent $bytes_received $session_time "$upstream_addr"';
+
+    access_log /var/log/nginx/access.log logs;
+
+    upstream K3s_api_server {
+        least_conn;
+        server 127.0.0.1:6443 max_fails=3 fail_timeout=5s;
+    }
+    server {
+        listen 8022 ssl;
+        server_name k3s-cluster.onwalk.net;
+        ssl_certificate /etc/ssl/onwalk.net.pem;
+        ssl_certificate_key /etc/ssl/onwalk.net.key;
+        proxy_pass K3s_api_server;
     }
 }
 EOF
@@ -74,7 +86,7 @@ disable_cni="--flannel-backend=none --disable-network-policy"
 default="--disable=traefik,servicelb --data-dir=/opt/rancher/k3s --kube-apiserver-arg service-node-port-range=0-50000"
 
 case $enable_api_access in
-  'true')  api_opts="--kube-apiserver-arg=bind-address=0.0.0.0 --advertise-address=$advertise-address" ;;
+  'true')  api_opts="--tls-san=k3s-cluster.onwalk.net" ;;
   *) api_opts="" ;;
 esac
 
