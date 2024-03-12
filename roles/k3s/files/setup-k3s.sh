@@ -5,10 +5,8 @@ export version=$1
 export cni=$2
 export pod_cidr=$3
 export svc_cidr=$4
+export enable_api_access=$5
 
-disable_proxy="--disable-kube-proxy"
-disable_cni="--flannel-backend=none --disable-network-policy"
-default="--disable=traefik,servicelb --data-dir=/opt/rancher/k3s --kube-apiserver-arg service-node-port-range=0-50000"
 
 function setup_k3s()
 {
@@ -46,11 +44,19 @@ function setup_helm()
   fi
 }
 
+disable_proxy="--disable-kube-proxy"
+disable_cni="--flannel-backend=none --disable-network-policy"
+default="--disable=traefik,servicelb --data-dir=/opt/rancher/k3s --kube-apiserver-arg service-node-port-range=0-50000"
+
+case $enable_api_access in
+  'true')  api_opts="--kube-apiserver-arg=bind-address=0.0.0.0" ;;
+  *) api_opts="" ;;
+esac
 
 case $cni in
-	'default')  opts="$default" ;;
-	'kubeovn')  opts="$default $disable_cni" ;;
-	'cilium')   opts="$default $disable_cni $disable_proxy" ;;
+	'default')  opts="$default $api_opts" ;;
+	'kubeovn')  opts="$default $disable_cni $api_opts" ;;
+	'cilium')   opts="$default $disable_cni $disable_proxy $api_opts" ;;
         *) echo "error args" ;;
 esac
 
