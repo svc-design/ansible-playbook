@@ -8,7 +8,6 @@ export svc_cidr=$4
 export enable_api_access=$5
 export advertise-address=$6
 
-
 function setup_k3s()
 {
   local extra_opts=$1
@@ -45,7 +44,8 @@ function setup_helm()
   fi
 }
 
-function set_apiserver_proxy()
+
+function set_apiserver_l4_proxy()
 {
   sudo apt update && apt install nginx -y        
 cat > /etc/nginx/sites-available/default << EOF
@@ -70,12 +70,35 @@ stream {
         server 127.0.0.1:6443 max_fails=3 fail_timeout=5s;
     }
     server {
-        listen 8022 ssl;
+        listen 8022;
         server_name k3s-cluster.onwalk.net;
-        ssl_certificate /etc/ssl/onwalk.net.pem;
-        ssl_certificate_key /etc/ssl/onwalk.net.key;
         proxy_pass K3s_api_server;
     }
+}
+EOF
+  sudo systemctl restart nginx
+}
+
+###### function set_apiserver_l7_proxy #######
+function set_apiserver_l7_proxy()
+{
+  sudo apt update && apt install nginx -y        
+cat > /etc/nginx/sites-available/default << EOF
+server {
+    listen 6443 ssl;
+    ssl_certificate /usr/local/nginx/ssl/apiserver.crt;               # kube-apiserver cert
+    ssl_certificate_key /usr/local/nginx/ssl/apiserver.key;              # kube-apiserver key
+    ssl_trusted_certificate /usr/local/nginx/ssl/ca.crt;                         # ca.pem
+    location / {
+        proxy_ssl_certificate /usr/local/nginx/ssl/admin.crt;                    # kubectl cert
+        proxy_ssl_certificate_key /usr/local/nginx/ssl/admin.key;            # kubectl key
+        proxy_ssl_trusted_certificate /usr/local/nginx/ssl/ca.crt;               # ca.pem
+        proxy_pass https://control_plain_6443/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-Ip $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+    }
+  }
 }
 EOF
   sudo systemctl restart nginx
@@ -99,4 +122,5 @@ esac
 
 setup_k3s "$opts"
 setup_helm
-set_apiserver_proxy
+#set_apiserver_l4_proxy
+set_apiserver_l7_proxy
