@@ -45,6 +45,30 @@ function setup_helm()
   fi
 }
 
+function set_apiserver_proxy()
+{
+  sudo apt update && apt install nginx -y        
+cat > /etc/nginx/sites-available/default << EOF
+server {
+    listen 443 ssl;
+    server_name k3s-cluster.onwalk.net;
+
+    ssl_certificate /etc/ssl/onwalk.net.pem;
+    ssl_certificate_key /etc/ssl/onwalk.net.key;
+
+    location / {
+        proxy_pass https://127.0.0.1:6443;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_ssl_verify off;
+    }
+}
+EOF
+  sudo systemctl restart nginx
+}
+
 disable_proxy="--disable-kube-proxy"
 disable_cni="--flannel-backend=none --disable-network-policy"
 default="--disable=traefik,servicelb --data-dir=/opt/rancher/k3s --kube-apiserver-arg service-node-port-range=0-50000"
@@ -63,3 +87,4 @@ esac
 
 setup_k3s "$opts"
 setup_helm
+set_apiserver_proxy
