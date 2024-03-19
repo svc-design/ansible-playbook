@@ -117,7 +117,7 @@ disable_cni="--flannel-backend=none --disable-network-policy"
 default="--disable=traefik,servicelb --data-dir=/opt/rancher/k3s --kube-apiserver-arg service-node-port-range=0-50000"
 
 case $enable_api_access in
-  'true')  api_opts="--tls-san=k3s-cluster.onwalk.net" ;;
+  'true')  api_opts="--bind-address=0.0.0.0" ;;
   *) api_opts="" ;;
 esac
 
