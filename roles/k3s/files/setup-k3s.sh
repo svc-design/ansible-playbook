@@ -131,4 +131,4 @@ esac
 setup_k3s "$opts"
 setup_helm
 #set_apiserver_l4_proxy
-set_apiserver_l7_proxy
+#set_apiserver_l7_proxy
