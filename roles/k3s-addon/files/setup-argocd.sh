@@ -13,7 +13,24 @@ helm repo add argo https://argoproj.github.io/argo-helm
 helm repo update
 
 # 使用 Helm 部署 Argo CD
-helm install argocd argo/argo-cd -n argocd --create-namespace
+#helm upgrade --install argocd argo/argo-cd -n argocd --create-namespace
+
+cat <<EOF > values.yaml
+server:
+  ingress:
+    enabled: true
+    ingressClass: nginx
+    hosts:
+      - host: argocd.onwalk.net  # 替换为你的域名
+        paths:
+          - /
+    tls:
+      - secretName: argocd-tls
+        hosts:
+          - argocd.onwalk.net  # 替换为你的域名
+EOF
+
+helm upgrade --install argocd argo/argo-cd -n argocd -f values.yaml
 
 # 等待 Argo CD 完全启动
 echo "Waiting for Argo CD to be ready..."
@@ -27,7 +44,7 @@ kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=argocd-server -
 #  name: helmfile-application
 #  namespace: argocd
 #spec:
-#  project: default
+  project: default
 #  source:
 #    repoURL: $git_repo
 #    path: $helmfile_name

@@ -26,3 +26,14 @@
         gitops: enable
         external_dns: enable
         cert_issuance: vault
+    - include_role:
+        name: secret-manger
+      vars:
+        group: master
+        namespace: argocd
+        domain: onwalk.net
+        update_secret: true  
+        tls:
+          - secret_name: argocd-tls
+            keyfile: /etc/ssl/onwalk.net.key
+            certfile: /etc/ssl/onwalk.net.pem
