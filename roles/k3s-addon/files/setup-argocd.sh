@@ -8,7 +8,6 @@ check_not_empty() {
   fi
 }
 
-# 添加 Argo CD 的 Helm 仓库
 helm repo add argo https://argoproj.github.io/argo-helm
 helm repo update
 
@@ -19,9 +18,18 @@ cat <<EOF > values.yaml
 global:
   domain: argocd.onwalk.net
 server:
+  service:
+    type: NodePort
+    nodePortHttp: 80
+    nodePortHttps: 443
+    servicePortHttp: 80
+    servicePortHttps: 443
+    servicePortHttpName: http
+    servicePortHttpsName: https
   ingress:
-    enabled: true
-    ingressClass: nginx
+    enabled: false
+    ingressClassName: "nginx"
+    hostname: argocd.onwalk.net
     annotations:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
