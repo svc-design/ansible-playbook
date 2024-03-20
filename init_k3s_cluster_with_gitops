@@ -22,8 +22,8 @@
         name: k3s-addon
       vars:
         group: master
-        ingress: nginx
-        gitops: enable
+        argocd: enable
+        ingress: disable
         external_dns: enable
         cert_issuance: vault
     - include_role:
