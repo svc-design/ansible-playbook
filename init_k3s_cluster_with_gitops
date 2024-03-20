@@ -34,6 +34,6 @@
         domain: onwalk.net
         update_secret: true  
         tls:
-          - secret_name: argocd-tls
+          - secret_name: argocd-server-tls
             keyfile: /etc/ssl/onwalk.net.key
             certfile: /etc/ssl/onwalk.net.pem

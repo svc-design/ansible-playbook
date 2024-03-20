@@ -16,18 +16,16 @@ helm repo update
 #helm upgrade --install argocd argo/argo-cd -n argocd --create-namespace
 
 cat <<EOF > values.yaml
+global:
+  domain: argocd.onwalk.net
 server:
   ingress:
     enabled: true
     ingressClass: nginx
-    hosts:
-      - host: argocd.onwalk.net  # 替换为你的域名
-        paths:
-          - /
-    tls:
-      - secretName: argocd-tls
-        hosts:
-          - argocd.onwalk.net  # 替换为你的域名
+    annotations:
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    tls: true
 EOF
 
 helm upgrade --install argocd argo/argo-cd -n argocd -f values.yaml
