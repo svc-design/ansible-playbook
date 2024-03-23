@@ -28,6 +28,7 @@ controller:
   installPlugins:
     - git:5.2.0
     - database-mysql:1.4
+    - github:1.34.0
     - gitlab-plugin:1.7.16
     - pipeline-stage-view:2.33
     - database:191.vd5981b_97a_5fa_
@@ -37,6 +38,24 @@ controller:
     - workflow-aggregator:596.v8c21c963d92d
     - credentials-binding:636.v55f1275c7b_27
     - configuration-as-code:1670.v564dc8b_982d0
+    - docker-workflow:1.26  # 添加 Docker Pipeline 插件
+    - workflow-cps:2.92     # 添加 Pipeline 插件
+  JCasC:
+    enabled: true
+    defaultConfig: true
+    configScripts:
+      database: |
+        unclassified:
+          globalDatabaseConfiguration:
+            database:
+              mysql:
+                hostname: mysql.database.svc.cluster.local
+                port: '3306'
+                username: "root"
+                database: "jenkins"
+                password: $mysql_db_password
+                properties: "?useSSL=false"
+                validationQuery: "SELECT 1"
 agent:
   enabled: true
   replicas: 3

@@ -8,11 +8,10 @@
         name: jenkins
       vars:
         group: master
-        namespace: jenkins
-        db_namespace: database
         domain: onwalk.net
-        auto_issuance: false
+        namespace: jenkins
         update_secret: true
+        db_namespace: database
         tls:
           - secret_name: jenkins-tls
             keyfile: /etc/ssl/onwalk.net.key
