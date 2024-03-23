@@ -69,11 +69,13 @@ pipeline {
     stages {
         stage('Deploy Pipeline') {
             steps {
-                checkoutCode()
-                preSetup()
-                deploy()
-                postSetup()
-                check()
+                script {
+                    checkoutCode()
+                    preSetup()
+                    deploy()
+                    postSetup()
+                    check()
+                }
             }
         }
     }
