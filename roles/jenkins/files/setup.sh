@@ -8,6 +8,8 @@ export mysql_db_password=$4
 cat > values.yaml << EOF
 
 controller:
+  agentListenerServiceType: "NodePort"
+  agentListenerNodePort: 50000
   admin:
     username: 'admin'
     password: "jenkins"
@@ -41,7 +43,8 @@ controller:
     - credentials:1337.v60b_d7b_c7b_c9f
     - credentials-binding:642.v737c34dea_6c2  # 更新版本以满足依赖关系
     - configuration-as-code:1775.v810dc950b_514  # 更新版本以满足依赖关系
-    - docker-workflow:1.26
+    - docker-commons:439.va_3cb_0a_6a_fb_29
+    - docker-workflow:572.v950f58993843
     - workflow-cps:3883.vb_3ff2a_e3eea_f
   JCasC:
     enabled: true
@@ -63,6 +66,10 @@ agent:
   replicas: 3
   numExecutors: 1
   jenkinsUrl: https://jenkins.$domain
+  image:
+    repository: "jenkins/inbound-agent"
+    tag: "latest"
+  customJenkinsLabels: []
 
 persistence:
   enabled: true

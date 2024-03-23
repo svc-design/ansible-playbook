@@ -103,3 +103,22 @@
 在“Secret”框中粘贴您在 GitHub 上生成的 Personal Access Token。
 输入一个描述性的名称，并点击“OK”保存凭据。
 现在，您可以在 Jenkins 的配置中使用这个凭据来访问 GitHub API (https://api.github.com)。
+
+确保 Docker 已安装：在 Jenkins 代理节点上确认 Docker 已正确安装并配置。您可以通过在终端中执行 docker --version 命令来检查 Docker 是否可用。
+
+检查 Docker 环境：如果 Docker 已安装，请确保 Docker 服务正在运行。您可以使用 sudo systemctl status docker 命令检查 Docker 服务的状态。
+
+确认 Jenkins 全局工具配置：在 Jenkins 管理界面中，转到“系统管理”->“全局工具配置”，确保 Docker 工具已正确配置。如果未配置，您可以添加一个 Docker 工具，并指定正确的安装路径。
+
+重启 Jenkins 服务：在进行了上述更改后，尝试重启 Jenkins 服务，以确保新的配置生效。
+
+尝试在终端中执行 Docker 命令：在 Jenkins 代理节点上打开终端，尝试手动执行一些 Docker 命令（如 docker pull），看看是否能够正常执行
+
+要设置 Jenkins Docker 流水线，你可以按照以下步骤进行操作：
+
+前提条件
+确保你的 Jenkins 实例已经安装了以下插件：
+
+Docker Pipeline
+Docker Commons
+
