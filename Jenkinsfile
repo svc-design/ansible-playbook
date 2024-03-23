@@ -1,7 +1,7 @@
 pipeline {
     agent none
     options {
-        dockerPipeline {
+        docker {
             image 'artifact.onwalk.net/public/base/alpine-ansible-lint:latest'
         }
     }
