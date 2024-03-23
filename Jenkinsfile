@@ -9,11 +9,9 @@ pipeline {
                 }
             }
             steps {
-                sh 'gradle --version'
+                sh 'ansible-lint'
             }
         }
-    }
-    stages {
         stage('Pre Setup') {
             agent {
                 docker {
@@ -27,8 +25,6 @@ pipeline {
                 sh "echo 'ansible_become_password: \'xxxx\'' >> inventory/group_vars/all.yml"
             }
         }
-    }
-    stages {
         stage('Deploy') {
             agent {
                 docker {
@@ -40,8 +36,6 @@ pipeline {
                 sh "ansible-playbook -u ${secrets.ANSIBLE_SSH_USER} -i inventor.ini -kK playbooks/server.yml -l ${params.instance_name} -e 'ign_install_ver=${params.install_version}' --vault-password-file .vault_pass.txt --diff"
             }
         }
-    }
-    stages {
         stage('Postsetup') {
             agent {
                 docker {
@@ -55,3 +49,5 @@ pipeline {
         }
     }
 }
+
+
