@@ -1,7 +1,7 @@
 def checkoutCode() {
     stage('Checkout repository and submodules') {
         agent {
-            docker { image 'your-docker-image' }
+            docker { image 'artifact.onwalk.net/public/base/alpine-ansible-lint:latest' }
         }
         steps {
             checkout scm
@@ -12,7 +12,7 @@ def checkoutCode() {
 def preSetup() {
     stage('Pre Setup') {
         agent {
-            docker { image 'your-docker-image' }
+            docker { image 'artifact.onwalk.net/public/base/alpine-ansible-lint:latest' }
         }
         steps {
             script {
@@ -27,7 +27,7 @@ def preSetup() {
 def deploy() {
     stage('Deploy Ignition Server') {
         agent {
-            docker { image 'your-docker-image' }
+            docker { image 'artifact.onwalk.net/public/base/alpine-ansible-lint:latest' }
         }
         steps {
             script {
@@ -41,7 +41,7 @@ def deploy() {
 def postSetup() {
     stage('Post Setup') {
         agent {
-            docker { image 'your-docker-image' }
+            docker { image 'artifact.onwalk.net/public/base/alpine-ansible-lint:latest' }
         }
         steps {
             script {
@@ -54,7 +54,7 @@ def postSetup() {
 def check() {
     stage('Check') {
         agent {
-            docker { image 'your-docker-image' }
+            docker { image 'artifact.onwalk.net/public/base/alpine-ansible-lint:latest' }
         }
         steps {
             script {
