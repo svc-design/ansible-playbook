@@ -1,7 +1,3 @@
-- name: Set ArgoCD Contoller
-  script: files/setup-argocd.sh
-  when: inventory_hostname in groups[group] and ( argocd == 'enable' )
-
 - name: Enable nginx Ingress
   script: files/setup-ingress.sh {{ ingress }}  {{ ingress_ip }}
   when: inventory_hostname in groups[group] and ( ingress == 'nginx' )
