@@ -51,7 +51,6 @@ controller:
             database:
               mysql:
                 hostname: mysql.database.svc.cluster.local
-                port: '3306'
                 username: "root"
                 database: "jenkins"
                 password: $mysql_db_password
