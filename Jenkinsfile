@@ -1,43 +1,56 @@
 pipeline {
     agent any
-    options {
-        docker.image 'artifact.onwalk.net/public/base/alpine-ansible-lint:latest'
+    stages {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'artifact.onwalk.net/public/base/alpine-ansible-lint:latest'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh 'gradle --version'
+            }
+        }
     }
     stages {
-        stage('Checkout repository and submodules') {
-            steps {
-                checkout scm
-            }
-        }
         stage('Pre Setup') {
-            steps {
-                script {
-                    sh "echo \"${secrets.ANSIBLE_SSH_PASSWORD}\" > ~/.vault_pass.txt"
-                    sh "echo 'ansible_password: \'xxxx\'' >> inventory/group_vars/all.yml"
-                    sh "echo 'ansible_become_password: \'xxxx\'' >> inventory/group_vars/all.yml"
+            agent {
+                docker {
+                    image 'artifact.onwalk.net/public/base/alpine-ansible-lint:latest'
+                    reuseNode true
                 }
             }
-        }
-        stage('Deploy Ignition Server') {
             steps {
-                script {
-                    sh "export ANSIBLE_HOST_KEY_CHECKING=False"
-                    sh "ansible-playbook -u ${secrets.ANSIBLE_SSH_USER} -i inventor.ini -kK playbooks/server.yml -l ${params.instance_name} -e 'ign_install_ver=${params.install_version}' --vault-password-file .vault_pass.txt --diff"
-                }
+                sh "echo \"${secrets.ANSIBLE_SSH_PASSWORD}\" > ~/.vault_pass.txt"
+                sh "echo 'ansible_password: \'xxxx\'' >> inventory/group_vars/all.yml"
+                sh "echo 'ansible_become_password: \'xxxx\'' >> inventory/group_vars/all.yml"
             }
         }
-        stage('Post Setup') {
-            steps {
-                script {
-                    sh "export ANSIBLE_HOST_KEY_CHECKING=False"
+    }
+    stages {
+        stage('Deploy') {
+            agent {
+                docker {
+                    image 'artifact.onwalk.net/public/base/alpine-ansible-lint:latest'
+                    reuseNode true
                 }
             }
-        }
-        stage('Check') {
             steps {
-                script {
-                    // Add your check logic here
+                sh "ansible-playbook -u ${secrets.ANSIBLE_SSH_USER} -i inventor.ini -kK playbooks/server.yml -l ${params.instance_name} -e 'ign_install_ver=${params.install_version}' --vault-password-file .vault_pass.txt --diff"
+            }
+        }
+    }
+    stages {
+        stage('Postsetup') {
+            agent {
+                docker {
+                    image 'artifact.onwalk.net/public/base/alpine-ansible-lint:latest'
+                    reuseNode true
                 }
+            }
+            steps {
+                sh "echo Todo"
             }
         }
     }
