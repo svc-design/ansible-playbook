@@ -27,9 +27,10 @@ controller:
           - jenkins.$domain
   installLatestPlugins: true
   installPlugins:
-    - git:5.2.0
+    - git:5.2.1
     - database-mysql:1.4
-    - github:1.34.0
+    - github:1.38.0
+    - github-pullrequest:0.7.0
     - gitlab-plugin:1.7.16
     - pipeline-stage-view:2.33
     - database:191.vd5981b_97a_5fa_
@@ -37,6 +38,7 @@ controller:
     - kubernetes:4029.v5712230ccb_f8
     - workflow-job:1385.vb_58b_86ea_fff1  # 更新版本以满足依赖关系
     - workflow-aggregator:596.v8c21c963d92d
+    - credentials:1337.v60b_d7b_c7b_c9f
     - credentials-binding:642.v737c34dea_6c2  # 更新版本以满足依赖关系
     - configuration-as-code:1775.v810dc950b_514  # 更新版本以满足依赖关系
     - docker-workflow:1.26
