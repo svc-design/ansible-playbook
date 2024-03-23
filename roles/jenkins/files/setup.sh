@@ -8,8 +8,9 @@ export mysql_db_password=$4
 cat > values.yaml << EOF
 
 controller:
-  adminUser: "admin"
-  adminPassword: "jenkins"
+  admin:
+    username: 'admin'
+    password: "jenkins"
   jenkinsUrlProtocol: "https"
   jenkinsHome: "/var/jenkins_home"
   jenkinsUrl: https://jenkins.$domain
@@ -34,12 +35,12 @@ controller:
     - database:191.vd5981b_97a_5fa_
     - locale:314.v22ce953dfe9e
     - kubernetes:4029.v5712230ccb_f8
-    - workflow-job:1326.ve643e00e9220
+    - workflow-job:1385.vb_58b_86ea_fff1  # Updated to resolve dependency conflicts
     - workflow-aggregator:596.v8c21c963d92d
-    - credentials-binding:636.v55f1275c7b_27
-    - configuration-as-code:1670.v564dc8b_982d0
-    - docker-workflow:1.26  # 添加 Docker Pipeline 插件
-    - workflow-cps:2.92     # 添加 Pipeline 插件
+    - credentials-binding:642.v737c34dea_6c2  # Updated to resolve dependency conflicts
+    - configuration-as-code:1775.v810dc950b_514  # Updated to resolve dependency conflicts
+    - docker-workflow:1.26
+    - workflow-cps:3769.v8b_e595e4d40d  # Updated to resolve dependency conflicts
   JCasC:
     enabled: true
     defaultConfig: true
@@ -68,12 +69,9 @@ persistence:
   size: "10Gi"
 networkPolicy:
   enabled: false
-backup:
-  enabled: false
 additionalConfig: {}
 EOF
 
 helm repo add jenkins https://charts.jenkins.io
 helm repo update
-#helm upgrade --install jenkins jenkins/jenkins --version 4.1.1 -f values.yaml
-helm upgrade --install jenkins jenkins/jenkins -n $namespace --create-namespace -f values.yaml 
+helm upgrade --install jenkins jenkins/jenkins -n $namespace --create-namespace -f values.yaml
