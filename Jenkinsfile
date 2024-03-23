@@ -1,9 +1,7 @@
 pipeline {
-    agent none
+    agent any
     options {
-        docker {
-            image 'artifact.onwalk.net/public/base/alpine-ansible-lint:latest'
-        }
+        docker.image 'artifact.onwalk.net/public/base/alpine-ansible-lint:latest'
     }
     stages {
         stage('Checkout repository and submodules') {
