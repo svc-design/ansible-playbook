@@ -83,3 +83,23 @@
 保存设置：确保在完成配置后点击“保存”保存更改。
 
 现在，您已成功配置了 Jenkins 的 GitHub 服务。您可以在 Jenkins 任务中使用这个配置来与 GitHub 仓库进行集成，例如触发构建、拉取代码等操作。
+
+
+对于 Jenkins 中的 GitHub API URL (https://api.github.com) 的凭据设置，您可以使用 GitHub Personal Access Token。这个 Token 可以通过以下步骤生成：
+
+在 GitHub 上登录您的账号。
+点击页面右上角的头像，选择“Settings”。
+在左侧边栏中，点击“Developer settings”。
+在左侧边栏中，点击“Personal access tokens”。
+点击“Generate new token”。
+输入一个描述性的名称，选择需要的权限（至少需要 repo 权限来访问仓库），然后点击“Generate token”。
+复制生成的 Token，并保存到一个安全的地方。请注意，这个 Token 只会显示一次，如果您丢失了，请重新生成一个新的 Token。
+在 Jenkins 中使用这个 Token 作为 GitHub API URL (https://api.github.com) 的凭据时，您可以将 Token 添加为 Jenkins 的凭据：
+
+进入 Jenkins 管理界面，转到“凭据” > “系统”。
+在“系统”页面中，点击“Global credentials (unrestricted)”。
+在凭据页面中，点击“Add credentials”。
+在“Kind”下拉菜单中选择“Secret text”。
+在“Secret”框中粘贴您在 GitHub 上生成的 Personal Access Token。
+输入一个描述性的名称，并点击“OK”保存凭据。
+现在，您可以在 Jenkins 的配置中使用这个凭据来访问 GitHub API (https://api.github.com)。
