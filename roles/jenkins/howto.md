@@ -65,3 +65,21 @@
 推送一些改动到您的GitHub仓库，检查是否触发了Jenkins构建。
 在Jenkins的构建历史中查看构建是否成功执行。
 通过完成以上步骤，您的GitHub代码仓库就与Jenkins关联起来了，可以实现自动触发构建的功能。
+
+要在 Jenkins 中设置 GitHub 服务，您需要进行以下步骤：
+
+安装 GitHub 插件：首先确保您的 Jenkins 实例已安装 GitHub 插件。如果尚未安装，请转到 Jenkins 的“插件管理”页面，在“可选插件”选项卡中搜索并安装 GitHub 插件。
+
+配置 GitHub 服务器：在 Jenkins 管理界面中，转到“系统管理” > “系统设置”。
+
+在系统设置页面中，找到并点击“GitHub”部分。
+点击“Add GitHub Server”添加一个新的 GitHub 服务器配置。
+在配置页面中，输入一个描述性的名称，例如“GitHub”。
+在 GitHub API URL 中输入 GitHub 的 API 地址。通常为 https://api.github.com。
+如果您的 GitHub 仓库需要身份验证，请在“凭据”部分选择一个已配置的凭据。如果尚未配置凭据，请点击“Add”添加一个新的凭据，选择类型为“Secret text”或“Username with password”，然后输入您的 GitHub 用户名和密码或访问令牌。
+完成配置后，点击“保存”保存 GitHub 服务器配置。
+验证配置：您可以在配置页面的底部点击“Test connection”来验证您的 GitHub 服务器配置是否正常工作。
+
+保存设置：确保在完成配置后点击“保存”保存更改。
+
+现在，您已成功配置了 Jenkins 的 GitHub 服务。您可以在 Jenkins 任务中使用这个配置来与 GitHub 仓库进行集成，例如触发构建、拉取代码等操作。
