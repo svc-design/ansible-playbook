@@ -10,6 +10,11 @@ chaosDaemon:
   socketPath: /run/k3s/containerd/containerd.sock
 dashboard:
   create: true
+  ingress:
+    enabled: true
+    hosts:
+      - name: chaos-mesh.$domain
+        tlsSecret: $secret
 EOF
 
 helm repo add chaos-mesh https://charts.chaos-mesh.org
