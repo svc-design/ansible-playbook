@@ -34,14 +34,4 @@ cat > init_observability-server << EOF
           - secret_name: obs-tls
             keyfile: /etc/ssl/${DOMAIN}.key
             certfile: /etc/ssl/${DOMAIN}.pem
-    - include_role:
-        name: flagger-loadtester
-      vars:
-        group: master
-        update_secret: true
-        namespace: loadtester
-        tls:
-          - secret_name: obs-tls
-            keyfile: /etc/ssl/${DOMAIN}.key
-            certfile: /etc/ssl/${DOMAIN}.pem
 EOF
