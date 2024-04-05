@@ -12,8 +12,10 @@ dashboard:
   create: true
   ingress:
     enabled: true
+    ingressClassName: "nginx"
     hosts:
       - name: chaos-mesh.$domain
+        tls: true
         tlsSecret: $secret
 EOF
 
