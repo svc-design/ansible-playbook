@@ -11,11 +11,9 @@ clickhouse:
   enabled: true
 server:
   enabled: true
-  hostNetwork: true
   dnsPolicy: ClusterFirstWithHostNet
 deepflow-agent:
   enabled: true
-  hostNetwork: "true"
   deepflowServerNodeIPS:
   - '10.0.1.2'
   kubernetesClusterId: d-yr8X6Lh0l2
