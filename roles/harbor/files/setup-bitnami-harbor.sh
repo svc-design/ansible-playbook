@@ -58,7 +58,7 @@ persistence:
       accesskeyid: $ak
       accesskeysecret: $sk
       region: "oss-cn-wulanchabu"
-      bucket: "oss-artifacts"
+      bucket: "harbor-oss"
       endpoint: "oss-cn-wulanchabu.aliyuncs.com"
     s3:
       region: ap-east-1
