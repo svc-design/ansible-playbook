@@ -14,12 +14,12 @@ exposureType: ingress
 ingress:
   core:
     ingressClassName: "nginx"
-    hostname: artifact.${domain}
+    hostname: harbor.${domain}
     extraTls:
     - hosts:
         - artifact.${domain}
       secretName: "$secret_name"
-externalURL: https://artifact.${domain}
+externalURL: https://harbor.${domain}
 
 postgresql:
   enabled: false
