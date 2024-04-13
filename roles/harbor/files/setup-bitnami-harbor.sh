@@ -61,7 +61,7 @@ externalRedis:
 persistence:
   enabled: true
   imageChartStorage:
-    type: $storage_type
+    type: $backend_type
     oss:
       accesskeyid: $ak
       accesskeysecret: $sk
