@@ -1,13 +1,21 @@
 #!/bin/bash
 
-ak=$1
-sk=$2
-domain=$3
-namespace=$4
-secret_name=$5
-redis_password=$6
-pg_db_password=$7
-storage_type=$8
+# 检查参数是否为空
+check_not_empty() {
+  if [[ -z $1 ]]; then
+    echo "Error: $2 is empty. Please provide a value."
+    exit 1
+  fi
+}
+
+check_not_empty "$1" "ak"             && export ak=$1
+check_not_empty "$2" "sk"             && export sk=$2
+check_not_empty "$3" "domain"         && export domain=$3
+check_not_empty "$4" "namespace"      && export namespace=$4
+check_not_empty "$5" "secret_name="   && export secret_name=$5
+check_not_empty "$6" "redis_password" && export redis_password=$6
+check_not_empty "$7" "pg_db_password" && export pg_db_password=$7
+check_not_empty "$8" "backend_type"   && export backend_type=$8
 
 cat > harbor-config.yaml << EOF
 exposureType: ingress
