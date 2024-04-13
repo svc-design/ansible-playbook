@@ -25,7 +25,7 @@ ingress:
     hostname: harbor.${domain}
     extraTls:
     - hosts:
-        - artifact.${domain}
+        - harbor.${domain}
       secretName: "$secret_name"
 externalURL: https://harbor.${domain}
 
