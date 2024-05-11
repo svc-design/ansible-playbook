@@ -53,6 +53,10 @@
       spec:
         restartPolicy: OnFailure
         runtimeClassName: nvidia
+        tolerations:
+          - key: nvidia.com/gpu  
+            operator: Exists
+            effect: NoSchedule
         containers:
           - name: cuda-container
             image: nvcr.io/nvidia/k8s/cuda-sample:nbody-cuda11.2.1
@@ -66,6 +70,11 @@
               - name: NVIDIA_DRIVER_CAPABILITIES
                 value: all
   register: pod_result
+
+- name: Test nvidia-smi
+  shell: |
+    sudo ctr image pull docker.io/nvidia/cuda:12.1.1-base-ubuntu22.04
+    sudo ctr run --rm -t --runc-binary=/usr/bin/nvidia-container-runtime     --env NVIDIA_VISIBLE_DEVICES=all     docker.io/nvidia/cuda:12.1.1-base-ubuntu22.04    cuda-11.6.2-base-ubuntu20.04 nvidia-smi
 
 - name: Output results
   debug:
