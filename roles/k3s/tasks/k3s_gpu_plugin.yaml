@@ -1,34 +1,8 @@
-- name: Add NVIDIA device plugin Helm repository
+- name: Install NVIDIA device plugin Helm chart
   shell: |
     helm repo add nvidia-device-plugin https://nvidia.github.io/k8s-device-plugin
     helm repo update
-
-- name: Install NVIDIA device plugin Helm chart
-  command: helm install nvidia-device-plugin nvidia-device-plugin/nvidia-device-plugin --namespace kube-system
-
-- name: Create RuntimeClass for NVIDIA
-  k8s:
-    state: present
-    definition:
-      apiVersion: node.k8s.io/v1
-      kind: RuntimeClass
-      metadata:
-        name: nvidia
-      handler: nvidia
-
-- name: Add NVIDIA device plugin Helm repository
-  command: helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
-
-- name: Update Helm repositories
-  command: helm repo update
-
-- name: Install NVIDIA device plugin Helm chart
-  command: >
-    helm upgrade -i nvdp nvdp/nvidia-device-plugin
-    --namespace nvidia-device-plugin
-    --set runtimeClassName=nvidia
-    --create-namespace
-    --version 0.14.1
+    helm install nvidia-device-plugin nvidia-device-plugin/nvidia-device-plugin --set runtimeClassName=nvidia --namespace kube-system
 
 - name: Verify RuntimeClass and Pod
   k8s:
@@ -70,11 +44,6 @@
               - name: NVIDIA_DRIVER_CAPABILITIES
                 value: all
   register: pod_result
-
-- name: Test nvidia-smi
-  shell: |
-    sudo ctr image pull docker.io/nvidia/cuda:12.1.1-base-ubuntu22.04
-    sudo ctr run --rm -t --runc-binary=/usr/bin/nvidia-container-runtime     --env NVIDIA_VISIBLE_DEVICES=all     docker.io/nvidia/cuda:12.1.1-base-ubuntu22.04    cuda-11.6.2-base-ubuntu20.04 nvidia-smi
 
 - name: Output results
   debug:

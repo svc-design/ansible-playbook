@@ -15,3 +15,21 @@
       - nvidia-container-runtime
     state: present
     update_cache: yes
+
+- name: Output results
+  debug:
+    msg: "{{ command_result.stdout_lines }}"
+  register: command_result
+
+- name: Test nvidia-smi
+  shell: |
+    sudo ctr image pull docker.io/nvidia/cuda:12.1.1-base-ubuntu22.04
+    sudo ctr run --rm -t --runc-binary=/usr/bin/nvidia-container-runtime \
+      --env NVIDIA_VISIBLE_DEVICES=all \
+      docker.io/nvidia/cuda:12.1.1-base-ubuntu22.04 \
+      cuda-11.6.2-base-ubuntu20.04 \
+      nvidia-smi
+  register: nvidia_smi_output
+
+- debug:
+    var: nvidia_smi_output.stdout_lines
