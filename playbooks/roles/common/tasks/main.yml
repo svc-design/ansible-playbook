@@ -17,6 +17,14 @@
   script: files/install-packages.sh
   when: (ansible_facts['distribution'] == "Ubuntu") or (ansible_facts['distribution'] == "Debian")
 
+#- name: Include GPU Configuration
+#  include_tasks: include_gpu.yaml
+#  when: (ansible_facts['distribution'] == "Ubuntu") or (ansible_facts['distribution'] == "Debian")
+#  tags: 
+#    - k3s
+#    - gpu
+#    - nvidia
+
 #- name: enable ip_forward
 #  shell: 'echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf; echo "net.ipv4.conf.all.proxy_arp = 1" >> /etc/sysctl.conf ; sysctl -p /etc/sysctl.conf'
 
