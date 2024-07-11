@@ -11,6 +11,7 @@ check_not_empty() {
 # 检查参数是否为空
 check_not_empty "$1" "DOMAIN" && DOMAIN=$1
 check_not_empty "$2" "NAMESPACE" && NAMESPACE=$2
+check_not_empty "$3" "SECRET_NAME" && SECRET_NAME=$3
 
 cat > vaules.yaml << EOF
 server:
@@ -22,7 +23,7 @@ server:
         paths:
           - /
     tls:
-      - secretName: vault-tls
+      - secretName: $SECRET_NAME
         hosts:
           - vault.$DOMAIN
 EOF
