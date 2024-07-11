@@ -1,17 +1,8 @@
-- name: Setup Vault 
+---
+- name: deploy vault server
   hosts: all
-  user: root
+  user: ubuntu
   become: yes
   gather_facts: yes
-  tasks:
-    - include_role:
-        name: vault
-      vars:
-        group: master
-        namespace: vault
-        update_secret: true
-        auto_issuance: false
-        tls:
-          - secret_name: vault-tls
-            keyfile: /etc/ssl/onwalk.net.key
-            certfile: /etc/ssl/onwalk.net.pem
+  roles:
+    - vault
