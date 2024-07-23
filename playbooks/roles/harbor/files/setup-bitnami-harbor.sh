@@ -25,7 +25,7 @@ ingress:
     hostname: images.${domain}
     extraTls:
     - hosts:
-        - harbor.${domain}
+        - images.${domain}
       secretName: "$secret_name"
 externalURL: https://images.${domain}
 
