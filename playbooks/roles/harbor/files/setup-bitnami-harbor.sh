@@ -22,12 +22,12 @@ exposureType: ingress
 ingress:
   core:
     ingressClassName: "nginx"
-    hostname: harbor.${domain}
+    hostname: images.${domain}
     extraTls:
     - hosts:
         - harbor.${domain}
       secretName: "$secret_name"
-externalURL: https://harbor.${domain}
+externalURL: https://images.${domain}
 
 postgresql:
   enabled: false
