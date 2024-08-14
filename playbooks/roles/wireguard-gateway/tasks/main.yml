@@ -1,7 +1,7 @@
 - name: Install WireGuard Packages
   shell: "mkdir -pv /etc/wireguard/ && \
           apt update && \
-          apt install wireguard-dkms wireguard-tools -y"
+          apt install resolvconf wireguard-dkms wireguard-tools -y"
   tags: wireguard
 
 - name: Check if IP forwarding is enabled
@@ -24,7 +24,7 @@
 - name: Configure WireGuard tunnel
   template:
     src: templates/wg0.conf.j2
-    dest: "/etc/wireguard/{{ gateway.tunnel }}.conf"
+    dest: "/etc/wireguard/{{ gateway.public_config.tunnel }}.conf"
     owner: root
     group: root
   notify: Restart WireGuard service  # 触发 handler
@@ -32,14 +32,14 @@
 
 - name: Stop WireGuard service if running
   systemd:
-    name: wg-quick@{{ gateway.tunnel }}
+    name: wg-quick@{{ gateway.public_config.tunnel }}
     state: stopped
   ignore_errors: yes
   tags: wireguard
 
 - name: Enable and start WireGuard service
   systemd:
-    name: wg-quick@{{ gateway.tunnel }}
+    name: wg-quick@{{ gateway.public_config.tunnel }}
     enabled: yes
     state: started
   tags: wireguard
