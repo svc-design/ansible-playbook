@@ -5,7 +5,7 @@ extra_resolv_config:
   - "options edns0 trust-ad"
   - "search ap-northeast-1.compute.internal"
 gateway:
-  private_key: "{{ host_keys.global_gateway_private_key }}"
+  private_key: "{{ localhost_private_key }}"
   network: "10.255.0.1/32"
   listen_port: 51820
   tunnel: "wg0"
