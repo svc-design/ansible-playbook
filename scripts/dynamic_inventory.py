@@ -15,7 +15,7 @@ ssh_private_key = os.environ['SSH_PRIVATE_KEY']
 
 # Check if input is provided
 if len(sys.argv) < 2:
-    print("No groups and nodes provided. Usage: python 动态的inventory.py 'group1:host1:host_ip1 group2:host2:host_ip2'")
+    print("No groups and nodes provided. Usage: python dynamic_inventory.py 'group_name:host_name:host_ip'")
     sys.exit(1)
 
 # Parse input groups and hosts
@@ -47,8 +47,12 @@ ansible_ssh_private_key_file=~/.ssh/id_rsa
 ansible_host_key_checking=False
 """
 
+# Create the SSH key directory if it doesn't exist
+ssh_dir = os.path.expanduser("~/.ssh")
+os.makedirs(ssh_dir, exist_ok=True)
+
 # Create the SSH key file
-ssh_key_path = os.path.expanduser("~/.ssh/id_rsa")
+ssh_key_path = os.path.join(ssh_dir, 'id_rsa')
 with open(ssh_key_path, 'w') as ssh_key_file:
     ssh_key_file.write(ssh_private_key)
 os.chmod(ssh_key_path, 0o400)  # Set permissions to 0400
