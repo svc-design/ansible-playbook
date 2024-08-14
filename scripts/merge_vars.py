@@ -32,6 +32,12 @@ def main():
     gateway_private_key = os.environ.get("GATEWAY_PRIVATE_KEY")
     gateway_public_config = os.environ.get("GATEWAY_PUBLIC_CONFIG")
 
+    # 检查并去掉开头的 '$'
+    if gateway_public_config.startswith('$'):
+        gateway_public_config = gateway_public_config[1:]
+    if gateway_private_key.startswith('$'):
+        gateway_private_key = gateway_private_key[1:]
+
     # 将 gateway_public_config 转换为字典
     public_config_dict = yaml.safe_load(gateway_public_config)
 
