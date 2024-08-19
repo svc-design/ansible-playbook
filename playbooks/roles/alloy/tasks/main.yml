@@ -1,0 +1,45 @@
+---
+- name: Install GPG
+  apt:
+    name: gpg
+    state: present
+
+- name: Create APT keyrings directory
+  file:
+    path: /etc/apt/keyrings/
+    state: directory
+    mode: '0755'
+
+- name: Add Grafana GPG key
+  ansible.builtin.get_url:
+    url: "{{ grafana_gpg_key_url }}"
+    dest: /etc/apt/keyrings/grafana.gpg
+    mode: '0644'
+
+- name: Add Grafana Alloy APT source
+  apt_repository:
+    repo: "{{ grafana_apt_source }}"
+    state: present
+
+- name: Update APT package list and install Grafana Alloy
+  apt:
+    name: alloy
+    state: present
+    update_cache: yes
+
+- name: Create Alloy configuration directory
+  file:
+    path: /etc/alloy
+    state: directory
+    mode: '0770'
+
+- name: Create Alloy configuration file
+  template:
+    src: templates/config.alloy.j2
+    dest: "/etc/alloy/config.alloy"
+
+- name: Reload and restart Alloy service
+  systemd:
+    name: alloy
+    state: restarted
+    daemon_reload: yes
