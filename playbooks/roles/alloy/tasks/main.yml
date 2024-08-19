@@ -10,16 +10,29 @@
     state: directory
     mode: '0755'
 
-- name: Add Grafana GPG key using curl
-  shell: |
-    sudo curl -fsSL {{ grafana_gpg_key_url }} -o /etc/apt/keyrings/grafana.gpg
-    sudo chmod 0644 /etc/apt/keyrings/grafana.gpg
+- name: Add Grafana GPG key
+  ansible.builtin.get_url:
+    url: "{{ grafana_gpg_key_url }}"
+    dest: /etc/apt/keyrings/grafana.gpg
+    mode: '0644'
   become: yes
 
-- name: Add Grafana Alloy APT source
+- name: Check if Grafana GPG key file is not empty
+  ansible.builtin.stat:
+    path: /etc/apt/keyrings/grafana.gpg
+  register: grafana_gpg_key_stat
+
+- name: Fail if Grafana GPG key file is empty
+  ansible.builtin.fail:
+    msg: "The Grafana GPG key file is empty or does not exist."
+  when: grafana_gpg_key_stat.stat.size == 0
+  become: yes
+
+- name: Add Grafana APT source
   apt_repository:
-    repo: "{{ grafana_apt_source }}"
+    repo: "deb https://packages.grafana.com/oss/deb stable main"
     state: present
+    filename: grafana
 
 - name: Update APT package list and install Grafana Alloy
   apt:
