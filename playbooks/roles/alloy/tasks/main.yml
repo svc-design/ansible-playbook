@@ -10,11 +10,11 @@
     state: directory
     mode: '0755'
 
-- name: Add Grafana GPG key
-  ansible.builtin.get_url:
-    url: "{{ grafana_gpg_key_url }}"
-    dest: /etc/apt/keyrings/grafana.gpg
-    mode: '0644'
+- name: Add Grafana GPG key using curl
+  shell: |
+    sudo curl -fsSL {{ grafana_gpg_key_url }} -o /etc/apt/keyrings/grafana.gpg
+    sudo chmod 0644 /etc/apt/keyrings/grafana.gpg
+  become: yes
 
 - name: Add Grafana Alloy APT source
   apt_repository:
