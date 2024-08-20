@@ -9,12 +9,11 @@
     path: /etc/apt/keyrings/
     state: directory
     mode: '0755'
+  become: yes
 
 - name: Add Grafana GPG key
-  ansible.builtin.get_url:
-    url: "{{ grafana_gpg_key_url }}"
-    dest: /etc/apt/keyrings/grafana.gpg
-    mode: '0644'
+  shell: |
+    wget -q -O - {{ grafana_gpg_key_url }} | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null
   become: yes
 
 - name: Check if Grafana GPG key file is not empty
@@ -26,13 +25,10 @@
   ansible.builtin.fail:
     msg: "The Grafana GPG key file is empty or does not exist."
   when: grafana_gpg_key_stat.stat.size == 0
-  become: yes
 
 - name: Add Grafana APT source
-  apt_repository:
-    repo: "{{ grafana_apt_source }}"
-    state: present
-    filename: grafana
+  shell: |
+    echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | sudo tee /etc/apt/sources.list.d/grafana.list
   become: yes
 
 - name: Update APT package list and install Grafana Alloy
