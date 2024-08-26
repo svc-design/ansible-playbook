@@ -8,7 +8,7 @@
     redis_password : "{{ redis_command_raw.stdout }}"
 
 - name: get db password
-  shell: 'kubectl get secret --namespace {{ db_namspace }}  postgresql -o jsonpath="{.data.postgres-password}" | base64 -d'
+  shell: 'kubectl get secret --namespace {{ db_namespace }}  postgresql -o jsonpath="{.data.postgres-password}" | base64 -d'
   register: db_command_raw
   when: inventory_hostname in groups[group][0]
 
