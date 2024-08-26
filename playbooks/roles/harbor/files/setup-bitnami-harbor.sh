@@ -16,8 +16,11 @@ check_not_empty "$5" "secret_name="   && export secret_name=$5
 check_not_empty "$6" "redis_password" && export redis_password=$6
 check_not_empty "$7" "pg_db_password" && export pg_db_password=$7
 check_not_empty "$8" "backend_type"   && export backend_type=$8
+                                         export registry=$9
 
-cat > harbor-config.yaml << EOF
+cat > values.yaml << EOF
+global:
+  imageRegistry: "$registry"
 exposureType: ingress
 ingress:
   core:
@@ -77,5 +80,6 @@ EOF
 
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo update
-helm upgrade --install artifact bitnami/harbor --version=16.7.0 -f harbor-config.yaml -n $namespace
+helm repo update bitnami
+kubectl create ns $namespace || true
+helm upgrade --install artifact bitnami/harbor --version=16.7.0 -f values.yaml -n $namespace

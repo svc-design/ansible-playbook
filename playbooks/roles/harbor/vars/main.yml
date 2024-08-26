@@ -1,6 +1,7 @@
 group: master
 namespace: artifact
 db_namespace: database
+cache_namespace: redis
 update_secret: true
 tls:
   - secret_name: harbor-tls
