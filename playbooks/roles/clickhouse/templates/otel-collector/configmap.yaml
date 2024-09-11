@@ -2,11 +2,25 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: otel-collector-config
+  namespace: default
 data:
   config.yaml: |
     receivers:
+      loki:
+        use_incoming_timestamp: true
+        protocols:
+          http:
+            endpoint: 0.0.0.0:3100
+          grpc:
+            endpoint: 0.0.0.0:3200
+      syslog:
+        protocol: rfc5424
+        tcp:
+          listen_address: "0.0.0.0:5514"
       fluentforward:
         endpoint: 0.0.0.0:24224
+      splunk_hec:
+        endpoint: 0.0.0.0:8088
       otlp:
         protocols:
           grpc:
@@ -21,6 +35,12 @@ data:
             endpoint: 0.0.0.0:14268
       zipkin:
         endpoint: 0.0.0.0:9411
+      skywalking:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:11800
+          http:
+            endpoint: 0.0.0.0:12800
       prometheus:
         config:
           scrape_configs:
@@ -28,6 +48,9 @@ data:
               scrape_interval: 5s
               static_configs:
                 - targets: ['exporter:8080']
+      influxdb:
+        endpoint: 0.0.0.0:8086
+
     connectors:
       servicegraph:
         latency_histogram_buckets: [ 100us, 1ms, 2ms, 6ms, 10ms, 100ms, 250ms ]
@@ -50,6 +73,7 @@ data:
         metrics_expiration: 5m
         events:
           enabled: false
+
     processors:
       batch:
         send_batch_size: 10000
@@ -75,9 +99,10 @@ data:
           - include: latency
             action: update
             new_name: traces_spanmetrics_latency
+
     exporters:
       qryn:
-        dsn: tcp://clickhouse-server:9000/cloki?username=default&password=*************
+        dsn: tcp://clickhouse-server:9000/qryn?username=default&password=*************
         timeout: 10s
         sending_queue:
           queue_size: 100
@@ -92,22 +117,26 @@ data:
         endpoint: localhost:4317
         tls:
           insecure: true
+
     extensions:
       health_check:
       pprof:
       zpages:
+
     service:
       extensions: [pprof, zpages, health_check]
       pipelines:
         logs:
-          receivers: [fluentforward, otlp]
+          receivers: [fluentforward, otlp, loki, syslog, splunk_hec]
           processors: [memory_limiter, resourcedetection/system, resource, batch]
           exporters: [qryn]
         traces:
-          receivers: [otlp, jaeger, zipkin]
+          receivers: [otlp, jaeger, zipkin, skywalking]
           processors: [memory_limiter, resourcedetection/system, resource, batch]
           exporters: [qryn, spanmetrics, servicegraph]
         metrics:
-          receivers: [prometheus, spanmetrics, servicegraph]
+          receivers: [prometheus, influxdb, spanmetrics, servicegraph]
           processors: [memory_limiter, resourcedetection/system, resource, batch]
           exporters: [qryn]
+
+
