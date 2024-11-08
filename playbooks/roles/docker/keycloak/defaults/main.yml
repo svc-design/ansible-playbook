@@ -1,0 +1,21 @@
+---
+postgres_db: keycloak
+postgres_user: keycloak_user
+postgres_password: your_keycloak_password
+
+keycloak_admin: admin
+keycloak_admin_password: your_admin_password
+
+keycloak_key_store_password: your_key_store_password
+keycloak_trust_store_password: your_trust_store_password
+
+# SSL证书路径和文件名
+ssl_certificate:
+  path: /etc/ssl/
+  name: onwalk.net.pem
+
+ssl_certificate_key:
+  path: /etc/ssl/
+  name: onwalk.net.key
+
+dhparam_path: /etc/ssl/dhparam.pem

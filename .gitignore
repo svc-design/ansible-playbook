@@ -1,3 +1,4 @@
+initialize.sh
 desktop-dev
 scripts/get_hcp_secret.py
 scripts/get_hcp_secret.sh

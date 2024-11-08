@@ -1,0 +1,44 @@
+---
+# post-setup.yml
+
+- name: 检查 Keycloak 容器是否运行
+  command: docker ps -q -f name=keycloak
+  register: keycloak_container
+  changed_when: false
+  failed_when: keycloak_container.stdout == ""
+
+- name: 确保 Keycloak 容器正在运行
+  debug:
+    msg: "Keycloak 容器正在运行"
+  when: keycloak_container.stdout != ""
+
+- name: 检查 PostgreSQL 容器是否运行
+  command: docker ps -q -f name=postgres
+  register: postgres_container
+  changed_when: false
+  failed_when: postgres_container.stdout == ""
+
+- name: 确保 PostgreSQL 容器正在运行
+  debug:
+    msg: "PostgreSQL 容器正在运行"
+  when: postgres_container.stdout != ""
+
+- name: 如果 Keycloak 容器未运行，则重新启动 Keycloak
+  become: true
+  command: docker-compose -f /home/ubuntu/docker-compose.yml up -d keycloak
+  when: keycloak_container.stdout == ""
+
+- name: 如果 PostgreSQL 容器未运行，则重新启动 PostgreSQL
+  become: true
+  command: docker-compose -f /home/ubuntu/docker-compose.yml up -d postgres
+  when: postgres_container.stdout == ""
+
+- name: 检查并显示 Keycloak 和 PostgreSQL 容器的状态
+  become: true
+  command: docker-compose -f /home/ubuntu/docker-compose.yml ps
+  register: docker_ps_status
+  changed_when: false
+
+- name: 输出 Docker Compose 容器状态
+  debug:
+    msg: "{{ docker_ps_status.stdout }}"
