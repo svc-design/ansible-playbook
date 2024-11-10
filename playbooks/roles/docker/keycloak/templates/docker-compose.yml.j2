@@ -1,64 +1,67 @@
----
-# post-setup.yml
+version: '3.7'
 
-- name: 启动 Docker Compose 服务
-  become: true
-  command: docker-compose -f /home/ubuntu/docker-compose.yml up -d
+services:
+  postgres:
+    container_name: {{ postgres_name }}  # 设置容器名称
+    image: {{ postgres_image }}
+    environment:
+      POSTGRES_DB: {{ postgres_db }}
+      POSTGRES_USER: {{ postgres_user }}
+      POSTGRES_PASSWORD: {{ postgres_password }}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - keycloak_network
 
-- name: 检查 Keycloak 容器是否运行
-  command: docker ps -q -f name={{ keycloak_name }}
-  register: keycloak_container
-  changed_when: false
-  failed_when: keycloak_container.stdout == ""
+  keycloak:
+    image: {{ keycloak_image }}
+    container_name: {{ keycloak_name }}  # 设置容器名称
+    environment:
+      KEYCLOAK_PROXY_HEADERS: xforwarded
+      KEYCLOAK_ADMIN: {{ keycloak_admin }}
+      KEYCLOAK_ADMIN_PASSWORD: {{ keycloak_admin_password }}
+      KEYCLOAK_DATABASE_VENDOR: postgresql
+      KEYCLOAK_DATABASE_HOST: {{ postgres_name }}
+      KEYCLOAK_DATABASE_PORT: 5432
+      KEYCLOAK_DATABASE_USER: {{ postgres_user }}
+      KEYCLOAK_DATABASE_NAME: {{ postgres_db }}
+      KEYCLOAK_DATABASE_PASSWORD: {{ postgres_password }}
+      KEYCLOAK_HTTPS_KEY_STORE_FILE: /etc/ssl/keystore.jks
+      KEYCLOAK_HTTPS_KEY_STORE_PASSWORD: {{ keycloak_key_store.password }}  # 私钥保护密码
+      KEYCLOAK_HTTPS_TRUST_STORE_FILE: /etc/ssl/truststore.jks
+      KEYCLOAK_HTTPS_TRUST_STORE_PASSWORD: {{ keycloak_trust_store.password }}  # 证书信任库保护密码
+    ports:
+      - 8080:8080
+    volumes:
+      - {{ keycloak_key_store.file }}:/etc/ssl/keystore.jks
+      - {{ keycloak_trust_store.file }}:/etc/ssl/truststore.jks
+    restart: always
+    depends_on:
+      - postgres
+    networks:
+      - keycloak_network
 
-- name: 确保 Keycloak 容器正在运行
-  debug:
-    msg: "Keycloak 容器正在运行"
-  when: keycloak_container.stdout != ""
+  nginx:
+    image: {{ nginx_image }}
+    container_name: {{ nginx_name }}  # 设置容器名称
+    depends_on:
+      - {{ keycloak_name }}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - {{ ssl_certificate.path }}{{ ssl_certificate.name }}:/etc/ssl/certs/{{ ssl_certificate.name }}
+      - {{ ssl_certificate_key.path }}{{ ssl_certificate_key.name }}:/etc/ssl/certs/{{ ssl_certificate_key.name }}
+      - {{ dhparam_path }}:/etc/nginx/ssl/dhparam.pem
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    restart: unless-stopped
+    networks:
+      - keycloak_network
 
-- name: 检查 PostgreSQL 容器是否运行
-  command: docker ps -q -f name={{ postgres_name }}
-  register: postgres_container
-  changed_when: false
-  failed_when: postgres_container.stdout == ""
+volumes:
+  postgres_data:
+    driver: local
 
-- name: 确保 PostgreSQL 容器正在运行
-  debug:
-    msg: "PostgreSQL 容器正在运行"
-  when: postgres_container.stdout != ""
-
-- name: 检查 Nginx 容器是否运行
-  command: docker ps -q -f name={{ nginx_name }}
-  register: nginx_container
-  changed_when: false
-  failed_when: nginx_container.stdout == ""
-
-- name: 确保 Nginx 容器正在运行
-  debug:
-    msg: "Nginx 容器正在运行"
-  when: nginx_container.stdout != ""
-
-- name: 如果 Keycloak 容器未运行，则重新启动 Keycloak
-  become: true
-  command: docker-compose -f /home/ubuntu/docker-compose.yml up -d keycloak
-  when: keycloak_container.stdout == ""
-
-- name: 如果 PostgreSQL 容器未运行，则重新启动 PostgreSQL
-  become: true
-  command: docker-compose -f /home/ubuntu/docker-compose.yml up -d postgres
-  when: postgres_container.stdout == ""
-
-- name: 如果 Nginx 容器未运行，则重新启动 Nginx
-  become: true
-  command: docker-compose -f /home/ubuntu/docker-compose.yml up -d nginx
-  when: nginx_container.stdout == ""
-
-- name: 检查并显示 Keycloak、PostgreSQL 和 Nginx 容器的状态
-  become: true
-  command: docker-compose -f /home/ubuntu/docker-compose.yml ps
-  register: docker_ps_status
-  changed_when: false
-
-- name: 输出 Docker Compose 容器状态
-  debug:
-    msg: "{{ docker_ps_status.stdout }}"
+networks:
+  keycloak_network:
+    driver: bridge

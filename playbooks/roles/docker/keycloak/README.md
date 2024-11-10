@@ -56,6 +56,7 @@ your_server_ip_or_hostname ansible_ssh_user=your_user ansible_ssh_private_key_fi
 
 # Ansible Playbook 执行和部署
 
+
 1. 克隆仓库
 首先，克隆该仓库到你的本地机器：
 
@@ -64,12 +65,14 @@ bash
 git clone https://your_repository_url.git
 cd ansible-playbook
 
+2. 测试执行
+ansible-playbook -i inventory.ini playbooks/deploy-docker-keycloak.yml -l cn-gateway.svc.plus -D -C
+
 2. 执行部署
 执行部署任务时，使用以下命令来运行 Ansible Playbook：
 
-bash
-复制代码
-ansible-playbook -i inventory.ini site.yml
+ansible-playbook -i inventory.ini playbooks/deploy-docker-keycloak.yml -l cn-gateway.svc.plus -D
+
 此命令将会启动以下步骤：
 
 - 安装并配置 Docker 和 Docker Compose。
