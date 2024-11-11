@@ -9,6 +9,13 @@ This repository contains a collection of Ansible playbooks and roles for various
 2. playbooks/roles/charts：面向大规模的 Kubernetes 集群，使用 Helm 和标准化 Chart 部署模式进行高可用和可扩展的管理。
 3. playbooks/roles/vhosts：传统的非容器化部署方式，通常涉及手动配置服务器和虚拟主机，适用于不使用容器的应用场景。
 
+### Docker
+
+| Role                 | Description                                          | CICD    | Validate | Last Update |
+|----------------------|------------------------------------------------------|---------|----------|-------------|
+| `keycloak`             | 用于管理身份认证和授权服务。                         |  github |   yes    | 2024-11-10  |
+| `harbor`               | 容器镜像仓库角色，用于存储和管理容器镜像。           |         |   yes    | 2024-11-14  |
+
 ### Charts
 
 | Role                        | Description                                           | CICD  | Validate | Last Update |
@@ -34,11 +41,6 @@ This repository contains a collection of Ansible playbooks and roles for various
 | `chartmuseum`                | 用于存储和管理 Kubernetes Chart 图表仓库。             |       |          |             |
 | `openldap`                   | 用于设置和管理 OpenLDAP 身份认证服务。                 |       |          |             |
 
-### Docker
-
-| Role                 | Description                                          | CICD  | Validate | Last Update |
-|----------------------|------------------------------------------------------|-------|----------|-------------|
-| `keycloak`             | 用于管理身份认证和授权服务。                         |       |   yes    | 2024-11-10  |
 
 ### VHosts
 
