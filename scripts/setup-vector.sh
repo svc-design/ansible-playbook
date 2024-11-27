@@ -98,4 +98,4 @@ customConfig:
       type: http
       uri: http://deepflow-agent.deepflow/api/v1/log
 EOF
-helm upgrade --install vector vector/vector --namespace monitoring --create-namespace -f vector-values-custom.yaml
+helm upgrade --install vector vector/vector --namespace deepflow --create-namespace -f vector-values-custom.yaml

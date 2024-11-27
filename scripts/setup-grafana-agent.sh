@@ -5,10 +5,10 @@ set -e
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
-kubectl create ns monitoring || true
+kubectl create ns deepflow || true
 
 helm upgrade --install kube-state-metrics prometheus-community/kube-state-metrics \
-  --namespace monitoring --create-namespace
+  --namespace deepflow --create-namespace
 
 cat > grafana-agent-config.yaml << EOF
 global:
@@ -26,7 +26,8 @@ metrics:
       - job_name: 'kube-state-metrics'
         static_configs:
           - targets:
-              - kube-state-metrics.monitoring.svc.cluster.local:8080
+              - http://10.43.155.169:8080/metrics
+              - http://kube-state-metrics.deepflow.svc.cluster.local:8080
         relabel_configs:
           - action: keep
             source_labels: [__meta_kubernetes_service_name]
@@ -39,8 +40,8 @@ traces:
 EOF
 
 helm upgrade --install grafana-agent grafana/grafana-agent \
-  --namespace monitoring \
+  --namespace deepflow \
   -f grafana-agent-config.yaml
 
-kubectl get pods -n monitoring
+kubectl get pods -n deepflow
 
