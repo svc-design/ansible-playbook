@@ -14,6 +14,19 @@ cat > grafana-agent-config.yaml << EOF
 global:
   image:
     registry: "images.onwalk.net/public"
+server:
+  log_level: info
+metrics:
+  global:
+    scrape_interval: 1m
+  configs:
+    - name: agent
+      scrape_configs:
+        - job_name: kube-state-metrics
+          static_configs:
+            - targets: ['10.43.155.169:8080']
+      remote_write:
+        - url: http://deepflow-agent.deepflow.svc.cluster.local/api/v1/prometheus
 metrics:
   enabled: true
   serviceMonitor:
