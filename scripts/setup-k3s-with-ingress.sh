@@ -165,6 +165,27 @@ sourceController:
       memory: 100Mi
 EOF
 
+  cat > nginx-cm.yaml << EOF
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-nginx-ingress
+  namespace: ingress
+data:
+  use-ssl-certificate-for-ingress: "false"
+  external-status-address: $ingress_ip
+  proxy-connect-timeout: 10s
+  proxy-read-timeout: 10s
+  client-header-buffer-size: 64k
+  client-body-buffer-size: 64k
+  client-max-body-size: 1000m
+  proxy-buffers: 8 32k
+  proxy-body-size: 1024m
+  proxy-buffer-size: 32k
+  proxy-connect-timeout: 10s
+  proxy-read-timeout: 10s
+EOF
+
   cat > cluster-config.yaml << EOF
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: GitRepository
