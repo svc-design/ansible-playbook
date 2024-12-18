@@ -23,29 +23,20 @@ kubectl create ns deepflow || true
 helm upgrade --install kube-state-metrics prometheus-community/kube-state-metrics \
   --namespace deepflow --create-namespace
 
+helm upgrade --install node-exporter prometheus-community/prometheus-node-exporter \
+  --namespace deepflow --create-namespace \
+  --set service.type=ClusterIP \
+  --set service.port=9100
+
 cat > grafana-agent-config.yaml << EOF
 global:
   image:
     registry: "images.onwalk.net/public"
-metrics:
-  enabled: true
-  serviceMonitor:
-    enabled: true
-  prometheus:
-    instance: default
-    remoteWrite:
-      - url: http://deepflow-agent.deepflow/api/v1/prometheus 
-    scrapeConfigs:
-      - job_name: 'kube-state-metrics'
-        static_configs:
-          - targets:
-              - http://10.43.155.169:8080/metrics
-              - http://kube-state-metrics.deepflow.svc.cluster.local:8080
-        relabel_configs:
-          - action: keep
-            source_labels: [__meta_kubernetes_service_name]
-            regex: kube-state-metrics
-
+agent:
+  mode: 'static'
+  configMap:
+    create: true
+    content: ''
 logs:
   enabled: false
 traces:
@@ -159,3 +150,41 @@ customConfig:
       uri: http://deepflow-agent.deepflow/api/v1/log
 EOF
 helm upgrade --install vector vector/vector --namespace deepflow --create-namespace -f vector-values-custom.yaml
+
+cat > grafana-agent-configmap.yaml << EOF
+apiVersion: v1
+data:
+  config.yaml: |-
+    server:
+      log_level: info
+      log_format: logfmt
+    metrics:
+      global:
+        scrape_interval: 1m
+      configs:
+        - name: agent
+          scrape_configs:
+            - job_name: kube-state-metrics
+              static_configs:
+                - targets: ['10.43.155.169:8080']
+            - job_name: node-metrics
+              static_configs:
+                - targets: ['10.43.68.133:9100']
+          remote_write:
+            - url: http://deepflow-agent.deepflow.svc.cluster.local/api/v1/prometheus
+kind: ConfigMap
+metadata:
+  annotations:
+    meta.helm.sh/release-name: grafana-agent
+    meta.helm.sh/release-namespace: deepflow
+  labels:
+    app.kubernetes.io/instance: grafana-agent
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: grafana-agent
+    app.kubernetes.io/version: v0.42.0
+    helm.sh/chart: grafana-agent-0.42.0
+  name: grafana-agent
+  namespace: deepflow
+EOF
+
+kubectl apply -f grafana-agent-configmap.yaml
