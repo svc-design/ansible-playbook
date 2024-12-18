@@ -1,5 +1,7 @@
+.DS_Store
 initialize.sh
 desktop-dev
 scripts/get_hcp_secret.py
 scripts/get_hcp_secret.sh
 scripts/get_hcp_secret.test
+scripts/sync.sh
