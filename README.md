@@ -101,8 +101,12 @@ bash
 curl -sfL https://mirrors.onwalk.net/public/k3s_setup.sh | bash -
 To expose the Kubernetes API server via NGINX, refer to the guide here.
 
-markdown
-复制代码
+#### python externally-managed-environment
+sudo apt install -y python3-venv python3-pip 
+python3 -m venv venv
+source ~/venv/bin/activate
+pip install [package-name]
+deactivate
 
 ### Changes:
 - All roles under **Charts** have been added and listed.
