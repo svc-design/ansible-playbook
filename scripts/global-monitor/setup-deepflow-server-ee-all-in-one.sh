@@ -25,4 +25,12 @@ sudo kubectl create secret docker-registry deepflow-registry-secret \
   --docker-email=manbuzhe2009@qq.com 	   \
   -n deepflow
 
+sudo kubectl create ns openebs || true
+sudo kubectl create secret docker-registry deepflow-registry-secret \
+  --docker-server=global-images.onwalk.net \
+  --docker-username=admin 		   \
+  --docker-password=Harbor12345 	   \
+  --docker-email=manbuzhe2009@qq.com 	   \
+  -n openebs
+
 /usr/local/deepflow/bin/deepflow-deploy -i
