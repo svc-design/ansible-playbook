@@ -10,8 +10,10 @@ debug          = false
 debug_full     = false
 address        = "unix:///run/k3s/containerd/containerd.sock"
 namespace      = "k8s.io"
-cni_path       = "/var/lib/nerdctl/cni/bin"
-cni_netconfpath = "/var/lib/nerdctl/cni/net.d"
+snapshotter    = "stargz"
+cgroup_manager = "cgroupfs"
+hosts_dir      = ["/etc/containerd/certs.d", "/etc/docker/certs.d"]
+experimental   = true
 EOF
 
 sudo CONTAINERD_ADDRESS=/run/k3s/containerd/containerd.sock nerdctl --namespace k8s.io ps
