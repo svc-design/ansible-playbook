@@ -9,5 +9,6 @@ NAMESPACES=("deepflow" "openebs" "kube-system")
 for NAMESPACE in "${NAMESPACES[@]}"; do
   echo "正在删除 $NAMESPACE 命名空间中非 Running 状态的 Pod..."
   kubectl get pods -n $NAMESPACE | grep -v Running | awk 'NR>1 {print $1}' | xargs kubectl delete pod -n $NAMESPACE --force
+  kubectl delete jobs --all -n $NAMESPACE
   echo "$NAMESPACE 命名空间清理完成！"
 done

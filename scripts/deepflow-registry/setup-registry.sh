@@ -10,4 +10,4 @@ sudo cp deepflow-registry.yaml /opt/deepflow-registry/config/deepflow-registry.y
 sudo CONTAINERD_ADDRESS=/run/k3s/containerd/containerd.sock nerdctl --namespace k8s.io load -i /usr/local/deepflow/registry.tar
 sudo CONTAINERD_ADDRESS=/run/k3s/containerd/containerd.sock nerdctl --namespace k8s.io compose -f /opt/deepflow-registry/config/compose.yaml down
 sudo CONTAINERD_ADDRESS=/run/k3s/containerd/containerd.sock nerdctl --namespace k8s.io compose -f /opt/deepflow-registry/config/compose.yaml up -d
-sudo echo "127.0.0.1 local_registry.onwalk.net" >> /etc/hosts
+sudo echo "127.0.0.1 repo.onwalk.net" >> /etc/hosts
