@@ -1,10 +1,10 @@
 - name: Check if systemctl is available
-  command: which systemctl
+  command: which hostnamectl
   register: systemctl_check
   ignore_errors: true
 
 - name: Set hostname using systemctl if available
-  shell: "systemctl set-hostname {{ ansible_fqdn }}"
+  shell: "hostnamectl set-hostname {{ inventory_hostname }}"
   when: systemctl_check.rc == 0
 
 - name: Set hostname using hostname -F if systemctl is not available
