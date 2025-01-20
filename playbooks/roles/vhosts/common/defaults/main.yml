@@ -1,0 +1,3 @@
+enable_set_timezone: true       # 默认启用 Set timezone
+enable_set_hostname: true       # 默认启用 Set hostname
+enable_all_hosts_update: false  # 默认不更新所有主机的条目
