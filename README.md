@@ -12,16 +12,16 @@ This repository contains a collection of Ansible playbooks and roles for various
 ## Role Summary
 
 | Role Name             | Description                                            | Docker | Charts | VHosts | CICD    | Validate | Last Update  |
-|-----------------------|----  --------------------------------------------------|--------|--------|--------|---------|----------|--------------|
-| `common`                | 通用角色，包含一些常用的功能，如日志记录、监控等。     |        |        |   ✔    |         |   yes    | 2025-01-20   |
-| `keycloak`              | 用于管理身份认证和授权服务。                           |   ✔    |        |        | github  |   yes    | 2024-11-10   |
-| `harbor`                | 容器镜像仓库角色，用于存储和管理容器镜像。             |   ✔    |        |        | github  |   yes    | 2024-11-14   |
+|-----------------------|----  ---------------------------------------------------|--------|--------|--------|---------|----------|--------------|
+| `common`                | 通用角色，包含一些常用的功能，如日志记录、监控等。           |        |        |   ✔    |         |   yes    | 2025-01-20   |
+| `keycloak`              | 用于管理身份认证和授权服务。                             |   ✔    |        |        | github  |   yes    | 2024-11-10   |
+| `harbor`                | 容器镜像仓库角色，用于存储和管理容器镜像。                  |   ✔    |        |        | github  |   yes    | 2024-11-14   |
 | `app`                   | 参考模板。                                             |        |        |        |         |          |              |
 | `nginx`                 | 用于设置 Nginx                                         |        |   ✔    |   ✔    |         |          |              |
 | `grafana`               | 用于设置 Grafana                                       |        |   ✔    |   ✔    |         |          |              |
 | `grafana-loki`          | 用于设置 Grafana-loki                                  |        |   ✔    |   ✔    |         |          |              |
 | `Grafana-tempo`         | 用于设置 Grafana-tempo                                 |        |   ✔    |   ✔    |         |          |              |
-| `prometheus            | 用于设置 Prometheus                                    |        |   ✔    |   ✔    |         |          |              |
+| `prometheus`            | 用于设置 Prometheus                                    |        |   ✔    |   ✔    |         |          |              |
 | `prometheus-transfer`   | 用于 Prometheus 数据传输设置。                         |        |        |   ✔    |         |          |              |
 | `vector`                | 用于配置日志收集代理。                                 |        |        |   ✔    |         |          |              |
 | `node-exporter`         | 用于导出系统和硬件的监控数据。                         |        |   ✔    |        |         |          |              |
